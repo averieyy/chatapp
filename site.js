@@ -3,10 +3,13 @@ let ws = new WebSocket("ws://"+location.host+"/chat");
 let username;
 
 const chistorybox = document.getElementById("chathistory");
+const chatroomlist = document.getElementById("chatroomlist");
 const msgin = document.getElementById("messagein");
 const msgbtn = document.getElementById("msgsubmit");
 
 let chathistory = "";
+let currentchatroom = "";
+let chroomjson;
 
 ws.addEventListener("message", (ev) => {
     let msg = ev.data;
@@ -25,8 +28,11 @@ ws.addEventListener("message", (ev) => {
 
 function sendmsg () {
     if (!username) {
+        if (msgin.value.length == 0) return;
         username = msgin.value;
         ws.send("AUTH " + username);
+        ws.send("JOIN " + chroomjson['default']);
+        currentchatroom = chroomjson['default'];
         msgin["placeholder"] = "Message";
         msgin.value = "";
         return;
@@ -43,6 +49,7 @@ msgbtn.addEventListener("click", (ev) => {
 });
 
 function renderchathistory() {
+    chistorybox.innerHTML = "";
     historylines = chathistory.split("\n");
     for (let line of historylines) {
         renderline(line);
@@ -56,7 +63,7 @@ function renderline(line) {
         currenthtmlelement.className = "wsmessage";
         currenthtmlelement.innerText = "[ " + lineargs[1] + " ]: " + lineargs.splice(2).join(" ");
     }
-    if (lineargs[0] == "AUTH") {
+    if (lineargs[0] == "JOIN") {
         currenthtmlelement.className = "wsdetail";
         currenthtmlelement.innerText = lineargs[1] + " joined!";
     }
@@ -64,6 +71,30 @@ function renderline(line) {
         currenthtmlelement.className = "wsdetail";
         currenthtmlelement.innerText = lineargs[1] + " left!";
     }
+    if (lineargs[0] == "NOTE") {
+        currenthtmlelement.className = "wswarning";
+        currenthtmlelement.innerText = lineargs.splice(1).join(" ");
+    }
 
     chistorybox.appendChild(currenthtmlelement);
 }
+
+async function getchatrooms () {
+    let chatrooms = await fetch("/chatrooms");
+    chroomjson = await chatrooms.json();
+    for (let chatroom of chroomjson['chatrooms']) {
+        let chatroomelement = document.createElement("div");
+        chatroomelement.className = "chatroom";
+        chatroomelement.innerText = "/"+chatroom['name'];
+        chatroomelement.title = chatroom['description'];
+        chatroomelement.addEventListener("click", () => {
+            if (username && currentchatroom != chatroom['name']){
+                currentchatroom = chatroom['name']
+                ws.send("JOIN " + chatroom['name']);
+            }
+        });
+        chatroomlist.appendChild(chatroomelement);
+    }
+}
+
+getchatrooms();

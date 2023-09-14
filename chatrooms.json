@@ -1,0 +1,13 @@
+{
+    "chatrooms": [
+        {
+            "name": "chat",
+            "description": "A nice chatroom for normal conversation"
+        },
+        {
+            "name": "void",
+            "description": "A place to scream your thoughts into the void"
+        }
+    ],
+    "default": "chat"
+}

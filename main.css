@@ -28,14 +28,20 @@ body {
     overflow-y: auto;
 }
 
-#chatbox {
+#centerarea {
+
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
+    width: calc(min(500px, 50vw) + min(25vw, 250px) + 50px);
+}
+
+#chatbox {
     background-color: #272727;
     padding: 10px;
     border-radius: 5px;
+    float: left;
 }
 
 #chatinput {
@@ -76,4 +82,44 @@ input {
     font-style: italic;
     color: #cfcfcf;
     margin: 0px;
+}
+
+.wswarning {
+    font-style: italic;
+    font-weight: bold;
+    color: #cf9f9f;
+}
+
+#chatroomselector {
+    margin-left: 10px;
+    padding: 5px;
+    width: min(calc(25vw - 10px), 250px);
+    float: right;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+#chatroomselector h1 {
+    text-align: center;
+}
+
+h1 {
+    margin: 0px;
+}
+
+#chatroomlist {
+    margin-left: 20px;
+    border-left: 2px solid #efefef;
+}
+
+.chatroom {
+    padding-left: 10px;
+    border-bottom: 2px solid #efefef;
+    padding-right: 10px;
+    width: fit-content;
+    cursor: pointer;
+    margin-top: 5px;
+    user-select: none;
 }
