@@ -9,9 +9,10 @@ const msgin = document.getElementById("messagein");
 const msgbtn = document.getElementById("msgsubmit");
 const title = document.getElementById("title");
 const lightmode = document.getElementById("lightmode");
+const description = document.getElementById("description");
 
 lightmode.addEventListener("mousedown", () => {
-	document.body.style.backgroundColor = '#ffffffff';
+	document.body.style.backgroundColor = '#ffffff';
 });
 
 lightmode.addEventListener("mouseup", () => document.body.style.backgroundColor = "#0f0f0f");
@@ -49,13 +50,17 @@ function sendmsg () {
     if (msgin.value.length == 0) return;
     let passwd = msgin.value;
     ws.send("AUTH " + username + " " + passwd);
-    ws.send("JOIN " + chroomjson['default']);
-    currentchatroom = chroomjson['default'];
-    title.innerText = currentchatroom.charAt(0).toUpperCase() + currentchatroom.slice(1);
+    let room = "";
     msgin["placeholder"] = "Message";
     msgin["type"] = "text";
     msgin.value = "";
     loggedin = true;
+    for (let chatroom of chroomjson['chatrooms']) {
+      if (chatroom['name'] == chroomjson['default']) {
+        room = chatroom;
+      }
+    }
+    joinRoom(room);
     return;
   }
   ws.send("MSG " + msgin.value);
@@ -112,6 +117,15 @@ function renderline(line) {
   chistorybox.appendChild(currenthtmlelement);
 }
 
+function joinRoom(room){
+  if (loggedin && currentchatroom != room['name']){
+    currentchatroom = room['name'];
+    ws.send("JOIN " + room['name']);
+    title.innerText = room['name'].charAt(0).toUpperCase() + room['name'].slice(1);
+    description.innerText = room['description'];
+  }
+}
+
 async function getchatrooms () {
   let chatrooms = await fetch("/chatrooms");
   chroomjson = await chatrooms.json();
@@ -121,11 +135,7 @@ async function getchatrooms () {
     chatroomelement.innerText = "/"+chatroom['name'];
     chatroomelement.title = chatroom['description'];
     chatroomelement.addEventListener("click", () => {
-      if (username && currentchatroom != chatroom['name']){
-        currentchatroom = chatroom['name']
-        ws.send("JOIN " + chatroom['name']);
-        title.innerText = chatroom['name'].charAt(0).toUpperCase() + chatroom['name'].slice(1);
-      }
+      joinRoom(chatroom);
     });
     chatroomlist.appendChild(chatroomelement);
   }
