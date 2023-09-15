@@ -41,8 +41,8 @@ h4 {
   left: 50%;
   top: 50%;
   transform: translateX(-50%) translateY(-50%);
-  max-width: calc(65vw + 40px);
-  width: calc(250px + 400px + 40px);
+  max-width: calc(90vw + 60px);
+  width: calc(250px + 250px + 400px + 60px);
 }
 
 #chatbox {
@@ -140,8 +140,39 @@ h1 {
   user-select: none;
 }
 
+#users {
+	max-width: 25vw;
+	width: 250px;
+	float: left;
+  margin-right: 10px;
+  padding: 5px;
+	background-color: #1f1f1f;
+	border-radius: 10px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+#users h1 {
+	text-align: center;
+}
+
+#userlist {
+  margin-left: 20px;
+  border-left: 2px solid #efefef;
+}
+
+.user {
+  padding-left: 10px;
+  border-bottom: 2px solid #efefef;
+  padding-right: 10px;
+  width: fit-content;
+  cursor: pointer;
+  margin-top: 5px;
+  user-select: none;
+}
+
 #lightmode {
-	background-color: #7f7f7f;
+	background-color: #3f3f3f;
 	position: absolute;
 	top: 10px;
 	left: 10px;
