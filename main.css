@@ -18,8 +18,6 @@ body {
 
 #chathistory {
   height: 50vh;
-  max-width: 50vw;
-  width: 500px;
   background-color: #1a1a1a;
   margin-bottom: 10px;
   padding: 5px;
@@ -29,15 +27,17 @@ body {
 }
 
 #centerarea {
-
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translateX(-50%) translateY(-50%);
-  width: calc(min(500px, 50vw) + min(25vw, 250px) + 50px);
+  max-width: calc(65vw + 40px);
+  width: calc(250px + 400px + 40px);
 }
 
 #chatbox {
+  max-width: 40vw;
+  width: 400px;
   background-color: #272727;
   padding: 10px;
   border-radius: 5px;
@@ -98,7 +98,8 @@ input {
 #chatroomselector {
   margin-left: 10px;
   padding: 5px;
-  width: min(calc(25vw - 10px), 250px);
+  max-width: 25vw;
+  width: 250px;
   float: right;
   background-color: #1f1f1f;
   border-radius: 10px;
