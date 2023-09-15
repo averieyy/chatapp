@@ -2,11 +2,14 @@ const { WebSocketServer } = require("ws");
 const { parse } = require("url");
 const fs = require("fs");
 const { createServer } = require ("http");
+const { pbkdf2, randomBytes } = require("crypto");
 
 let chatrooms = JSON.parse(fs.readFileSync("chatrooms.json"));
 let chatroomparticipants = {
     // 'chat': [ws1, ws2]
 };
+
+let logins = fs.readFileSync("./logins.json");
 
 let chathistories = {};
 
@@ -29,14 +32,32 @@ function broadcast (chatroom, content) {
     }
 }
 
+function validatePasswd(hash, salt, iterations, passwdattempt) {
+    return hash == pbkdf2(passwdattempt, salt, iterations);
+}
+
+function hashPassword(passwd) {
+    let salt = randomBytes(127).toString("base64");
+    let iterations = Math.floor(Math.random() * 1000) + 10000;
+    let hash = pbkdf2(passwd, salt, iterations);
+    
+    return {
+        salt: salt,
+        hash: hash,
+        iterations: iterations
+    };
+}
+
 wss.on("connection", (ws, req) => {
     let username;
     let chatroom;
+    let loggedin = false;
 
     ws.on("message", (data) => {
         let args = data.toString().split(" ");
         switch (args[0]) {
             case "JOIN":
+                if (!loggedin) break;
                 if (ischatroom(chatroom)) {
                     chatroomparticipants[chatroom].splice(chatroomparticipants[chatroom].indexOf(ws), 1);
                     broadcast(chatroom, "EXIT " + username);
@@ -69,9 +90,19 @@ wss.on("connection", (ws, req) => {
                 }
                 break;
             case "AUTH":
+                if (args.length < 3) break;
                 username = args[1];
+                if (username in logins) {
+                    let success = validatePasswd(logins[username]['hash'], logins[username]['salt'], logins[username]['iterations'], args[2]);
+                    if (!success) username = "";
+                    else loggedin = true;
+                }
+                let login = hashPassword(args[2]);
+                logins[username] = login;
+                fs.writeFileSync("./logins.json", JSON.stringify(logins));
                 break;
             case "MSG":
+                if (!loggedin) break;
                 if (args[1].length == 0) break;
                 if (!ischatroom(chatroom)) break;
                 let msg = args.slice(1).join(" ");
@@ -145,4 +176,4 @@ server.on("request", (req, res) => {
     
 });
 
-server.listen(3000);
+server.listen(3000, "10.2.2.51");
