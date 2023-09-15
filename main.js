@@ -97,9 +97,11 @@ wss.on("connection", (ws, req) => {
                     if (!success) username = "";
                     else loggedin = true;
                 }
-                let login = hashPassword(args[2]);
-                logins[username] = login;
-                fs.writeFileSync("./logins.json", JSON.stringify(logins));
+                else {
+                    let login = hashPassword(args[2]);
+                    logins[username] = login;
+                    fs.writeFileSync("./logins.json", JSON.stringify(logins));
+                }
                 break;
             case "MSG":
                 if (!loggedin) break;
