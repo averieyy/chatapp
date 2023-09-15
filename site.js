@@ -34,6 +34,7 @@ function sendmsg () {
         ws.send("AUTH " + username);
         ws.send("JOIN " + chroomjson['default']);
         currentchatroom = chroomjson['default'];
+      title.innerText = currentchatroom.charAt(0).toUpperCase() + currentchatroom.slice(1);
         msgin["placeholder"] = "Message";
         msgin.value = "";
         return;
@@ -90,9 +91,9 @@ async function getchatrooms () {
         chatroomelement.title = chatroom['description'];
         chatroomelement.addEventListener("click", () => {
             if (username && currentchatroom != chatroom['name']){
-                currentchatroom = chatroom['name']
-                ws.send("JOIN " + chatroom['name']);
-                title. ←innerText = chatroom['name'].charAt(0).toUpperCase() + chatroom['name'].slice(1);
+              currentchatroom = chatroom['name']
+              ws.send("JOIN " + chatroom['name']);
+              title.innerText = chatroom['name'].charAt(0).toUpperCase() + chatroom['name'].slice(1);
             }
         });
         chatroomlist.appendChild(chatroomelement);
