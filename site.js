@@ -4,6 +4,7 @@ let username;
 let loggedin = false;
 
 let currentchatusers = [];
+let selecteduser;
 
 const chistorybox = document.getElementById("chathistory");
 const chatroomlist = document.getElementById("chatroomlist");
@@ -34,7 +35,7 @@ ws.addEventListener("message", (ev) => {
       renderchathistory();
       break;
     default:
-      chathistory += msg + "\n";
+      chathistory += "\n" + msg;
       renderline(msg)
       break;
   }
@@ -91,7 +92,7 @@ function renderline(line) {
   let currenthtmlelement = document.createElement("p");
   if (lineargs[0] == "MSG") {
     let message = lineargs.splice(2).join(" ");
-    if(message.includes('@'.concat(username))){
+    if(message.includes('@'.concat(username)) || (userlist && lineargs[1] == selecteduser)){
       currenthtmlelement.className = "wsmention";
     } else {
       currenthtmlelement.className = "wsmessage";
@@ -156,9 +157,9 @@ function renderusers () {
     userelement.className = "user";
     userelement.innerText = "@"+user;
     userelement.addEventListener("click", () => {
-      if (username && currentchatroom != chatroom['name']){
-        selecteduser = user;
-      }
+      if (selecteduser == user) selecteduser = "";
+      else selecteduser = user;
+      renderchathistory();
     });
     userlist.appendChild(userelement);
   }
