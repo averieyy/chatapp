@@ -3,8 +3,11 @@ let ws = new WebSocket("ws://"+location.host+"/chat");
 let username;
 let loggedin = false;
 
+let currentchatusers = [];
+
 const chistorybox = document.getElementById("chathistory");
 const chatroomlist = document.getElementById("chatroomlist");
+const userlist = document.getElementById("userlist");
 const msgin = document.getElementById("messagein");
 const msgbtn = document.getElementById("msgsubmit");
 const title = document.getElementById("title");
@@ -71,6 +74,7 @@ msgbtn.addEventListener("click", (ev) => {
 
 function renderchathistory() {
   chistorybox.innerHTML = "";
+  currentchatusers = [];
   historylines = chathistory.split("\n");
   for (let line of historylines) {
     renderline(line);
@@ -92,10 +96,14 @@ function renderline(line) {
   if (lineargs[0] == "JOIN") {
     currenthtmlelement.className = "wsdetail";
     currenthtmlelement.innerText = lineargs[1] + " joined!";
+    currentchatusers.push(lineargs[1]);
+    renderusers();
   }
   if (lineargs[0] == "EXIT") {
     currenthtmlelement.className = "wsdetail";
     currenthtmlelement.innerText = lineargs[1] + " left!";
+    currentchatusers.splice(currentchatusers.indexOf(lineargs[1]),1);
+    renderusers();
   }
   if (lineargs[0] == "NOTE") {
     currenthtmlelement.className = "wswarning";
@@ -128,6 +136,21 @@ async function getchatrooms () {
       }
     });
     chatroomlist.appendChild(chatroomelement);
+  }
+}
+
+function renderusers () {
+  userlist.innerHTML = "";
+  for (let user of currentchatusers) {
+    let userelement = document.createElement("div");
+    userelement.className = "user";
+    userelement.innerText = "@"+user;
+    userelement.addEventListener("click", () => {
+      if (username && currentchatroom != chatroom['name']){
+        selecteduser = user;
+      }
+    });
+    userlist.appendChild(userelement);
   }
 }
 
