@@ -1,6 +1,7 @@
 let ws = new WebSocket("ws://"+location.host+"/chat");
 
 let username;
+let loggedin = false;
 
 const chistorybox = document.getElementById("chathistory");
 const chatroomlist = document.getElementById("chatroomlist");
@@ -27,14 +28,22 @@ ws.addEventListener("message", (ev) => {
 });
 
 function sendmsg () {
-    if (!username) {
+    if (!loggedin) {
+        if (!username) {
+            if (msgin.value.length == 0) return;
+            username = msgin.value;
+            msgin["placeholder"] = "Password";
+            msgin.value = "";
+            return;
+        }
         if (msgin.value.length == 0) return;
-        username = msgin.value;
-        ws.send("AUTH " + username);
+        let passwd = msgin.value;
+        ws.send("AUTH " + username + " " + passwd);
         ws.send("JOIN " + chroomjson['default']);
         currentchatroom = chroomjson['default'];
         msgin["placeholder"] = "Message";
         msgin.value = "";
+        loggedin = true;
         return;
     }
     ws.send("MSG " + msgin.value);

@@ -2,14 +2,14 @@ const { WebSocketServer } = require("ws");
 const { parse } = require("url");
 const fs = require("fs");
 const { createServer } = require ("http");
-const { pbkdf2, randomBytes } = require("crypto");
+const { createHash, randomBytes } = require("crypto");
 
 let chatrooms = JSON.parse(fs.readFileSync("chatrooms.json"));
 let chatroomparticipants = {
     // 'chat': [ws1, ws2]
 };
 
-let logins = fs.readFileSync("./logins.json");
+let logins = JSON.parse(fs.readFileSync("./logins.json"));
 
 let chathistories = {};
 
@@ -32,19 +32,17 @@ function broadcast (chatroom, content) {
     }
 }
 
-function validatePasswd(hash, salt, iterations, passwdattempt) {
-    return hash == pbkdf2(passwdattempt, salt, iterations);
+function validatePasswd(hash, salt, passwdattempt) {
+    return hash == Buffer.from(createHash('sha256').update(passwdattempt + salt).digest('hex')).toString('base64');
 }
 
 function hashPassword(passwd) {
     let salt = randomBytes(127).toString("base64");
-    let iterations = Math.floor(Math.random() * 1000) + 10000;
-    let hash = pbkdf2(passwd, salt, iterations);
+    let hash = Buffer.from(createHash('sha256').update(passwd + salt).digest('hex')).toString('base64');
     
     return {
         salt: salt,
         hash: hash,
-        iterations: iterations
     };
 }
 
@@ -93,14 +91,25 @@ wss.on("connection", (ws, req) => {
                 if (args.length < 3) break;
                 username = args[1];
                 if (username in logins) {
-                    let success = validatePasswd(logins[username]['hash'], logins[username]['salt'], logins[username]['iterations'], args[2]);
-                    if (!success) username = "";
-                    else loggedin = true;
+                    let success = validatePasswd(logins[username]['hash'], logins[username]['salt'], args[2]);
+                    if (!success) {
+                        username = "";
+                        ws.send("ERR LOGIN");
+                        console.log("login attempt failed");
+                    }
+                    else {
+                        loggedin = true
+                    };
                 }
                 else {
                     let login = hashPassword(args[2]);
-                    logins[username] = login;
-                    fs.writeFileSync("./logins.json", JSON.stringify(logins));
+                    logins[username] = {};
+                    console.log(login.hash);
+                    console.log(login.salt);
+                    logins[username]['hash'] = login.hash.toString();
+                    logins[username]['salt'] = login.salt.toString();
+                    loggedin = true;
+                    fs.writeFileSync("./logins.json", JSON.stringify(logins, "utf8"));
                 }
                 break;
             case "MSG":
@@ -178,4 +187,4 @@ server.on("request", (req, res) => {
     
 });
 
-server.listen(3000, "10.2.2.51");
+server.listen(3000);
