@@ -33,6 +33,7 @@ function sendmsg () {
             if (msgin.value.length == 0) return;
             username = msgin.value;
             msgin["placeholder"] = "Password";
+            msgin["type"] = "password";
             msgin.value = "";
             return;
         }
@@ -42,6 +43,7 @@ function sendmsg () {
         ws.send("JOIN " + chroomjson['default']);
         currentchatroom = chroomjson['default'];
         msgin["placeholder"] = "Message";
+        msgin["type"] = "text";
         msgin.value = "";
         loggedin = true;
         return;
@@ -83,6 +85,13 @@ function renderline(line) {
     if (lineargs[0] == "NOTE") {
         currenthtmlelement.className = "wswarning";
         currenthtmlelement.innerText = lineargs.splice(1).join(" ");
+    }
+    if (lineargs[0] == "ERR") {
+        currenthtmlelement.className = "wswarning";
+        currenthtmlelement.innerText = "Failed to log in";
+        msgin.value = "";
+        username = "";
+        loggedin = false;
     }
 
     chistorybox.appendChild(currenthtmlelement);
