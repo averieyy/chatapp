@@ -1,125 +1,130 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap');
 
 * {
-    font-family: 'JetBrains Mono', 'Consolas', 'Consolaz', monospace;
-    color: #efefef;
+  font-family: 'JetBrains Mono', 'Consolas', 'Consolaz', monospace;
+  color: #efefef;
 }
 
 *::selection {
-    background-color: #efefef;
-    color: #3f3f3f;
+  background-color: #efefef;
+  color: #3f3f3f;
 }
 
 body {
-    margin: 0px;
-    min-height: 100%;
-    background-color: #0f0f0f;
+  margin: 0px;
+  min-height: 100%;
+  background-color: #0f0f0f;
 }
 
 #chathistory {
-    height: 50vh;
-    max-width: 50vw;
-    width: 500px;
-    background-color: #1a1a1a;
-    margin-bottom: 10px;
-    padding: 5px;
-    border-radius: 5px;
-    scroll-behavior: smooth;
-    overflow-y: auto;
+  height: 50vh;
+  max-width: 50vw;
+  width: 500px;
+  background-color: #1a1a1a;
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  scroll-behavior: smooth;
+  overflow-y: auto;
 }
 
 #centerarea {
 
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    width: calc(min(500px, 50vw) + min(25vw, 250px) + 50px);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: calc(min(500px, 50vw) + min(25vw, 250px) + 50px);
 }
 
 #chatbox {
-    background-color: #272727;
-    padding: 10px;
-    border-radius: 5px;
-    float: left;
+  background-color: #272727;
+  padding: 10px;
+  border-radius: 5px;
+  float: left;
 }
 
 #chatinput {
-    user-select: none;
+  user-select: none;
 }
 
 #msgsubmit {
-    all:unset;
-    width: calc(25% - 30px);
-    text-align: center;
-    background-color: #1f1f1f;
-    color: #efefef;
-    padding: 5px;
-    cursor: pointer;
-    user-select: none;
-    border-radius: 5px;
+  all:unset;
+  width: calc(25% - 30px);
+  text-align: center;
+  background-color: #1f1f1f;
+  color: #efefef;
+  padding: 5px;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 5px;
 }
 
 #messagein {
-    user-select: text;
-    all: unset;
-    width: 75%;
-    padding: 5px;
-    color: #efefef;
-    background-color: #1f1f1f;
-    border-radius: 5px;
+  user-select: text;
+  all: unset;
+  width: 75%;
+  padding: 5px;
+  color: #efefef;
+  background-color: #1f1f1f;
+  border-radius: 5px;
 }
 
 input {
-    outline: none;
+  outline: none;
 }
 
 .wsmessage {
-    margin: 0px;
+  margin: 0px;
+}
+
+.wsmention {
+  margin: 0px;
+  color: #904000;
 }
 
 .wsdetail {
-    font-style: italic;
-    color: #cfcfcf;
-    margin: 0px;
+  font-style: italic;
+  color: #cfcfcf;
+  margin: 0px;
 }
 
 .wswarning {
-    font-style: italic;
-    font-weight: bold;
-    color: #cf9f9f;
+  font-style: italic;
+  font-weight: bold;
+  color: #cf9f9f;
 }
 
 #chatroomselector {
-    margin-left: 10px;
-    padding: 5px;
-    width: min(calc(25vw - 10px), 250px);
-    float: right;
-    background-color: #1f1f1f;
-    border-radius: 10px;
-    padding-top: 30px;
-    padding-bottom: 30px;
+  margin-left: 10px;
+  padding: 5px;
+  width: min(calc(25vw - 10px), 250px);
+  float: right;
+  background-color: #1f1f1f;
+  border-radius: 10px;
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
 #chatroomselector h1 {
-    text-align: center;
+  text-align: center;
 }
 
 h1 {
-    margin: 0px;
+  margin: 0px;
 }
 
 #chatroomlist {
-    margin-left: 20px;
-    border-left: 2px solid #efefef;
+  margin-left: 20px;
+  border-left: 2px solid #efefef;
 }
 
 .chatroom {
-    padding-left: 10px;
-    border-bottom: 2px solid #efefef;
-    padding-right: 10px;
-    width: fit-content;
-    cursor: pointer;
-    margin-top: 5px;
-    user-select: none;
+  padding-left: 10px;
+  border-bottom: 2px solid #efefef;
+  padding-right: 10px;
+  width: fit-content;
+  cursor: pointer;
+  margin-top: 5px;
+  user-select: none;
 }
