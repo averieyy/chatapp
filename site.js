@@ -8,6 +8,14 @@ const chatroomlist = document.getElementById("chatroomlist");
 const msgin = document.getElementById("messagein");
 const msgbtn = document.getElementById("msgsubmit");
 const title = document.getElementById("title");
+const lightmode = document.getElementById("lightmode");
+
+lightmode.addEventListener("mousedown", () => {
+	document.body.style.backgroundColor = '#ffffffff';
+});
+
+lightmode.addEventListener("mouseup", () => document.body.style.backgroundColor = "#0f0f0f");
+lightmode.addEventListener("mouseleave", () => document.body.style.backgroundColor = "#0f0f0f");
 
 let chathistory = "";
 let currentchatroom = "";
