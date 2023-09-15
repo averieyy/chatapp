@@ -11,7 +11,7 @@ const title = document.getElementById("title");
 const lightmode = document.getElementById("lightmode");
 
 lightmode.addEventListener("mousedown", () => {
-	document.body.style.backgroundColor = '#ffffffff';
+	document.body.style.backgroundColor = '#ffffff';
 });
 
 lightmode.addEventListener("mouseup", () => document.body.style.backgroundColor = "#0f0f0f");
