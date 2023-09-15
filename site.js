@@ -6,6 +6,7 @@ const chistorybox = document.getElementById("chathistory");
 const chatroomlist = document.getElementById("chatroomlist");
 const msgin = document.getElementById("messagein");
 const msgbtn = document.getElementById("msgsubmit");
+const title = document.getElementById("title");
 
 let chathistory = "";
 let currentchatroom = "";
@@ -91,6 +92,7 @@ async function getchatrooms () {
             if (username && currentchatroom != chatroom['name']){
                 currentchatroom = chatroom['name']
                 ws.send("JOIN " + chatroom['name']);
+                title. ←innerText = chatroom['name'].charAt(0).toUpperCase() + chatroom['name'].slice(1);
             }
         });
         chatroomlist.appendChild(chatroomelement);
