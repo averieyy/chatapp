@@ -2,11 +2,14 @@ const { WebSocketServer } = require("ws");
 const { parse } = require("url");
 const fs = require("fs");
 const { createServer } = require ("http");
+const { createHash, randomBytes } = require("crypto");
 
 let chatrooms = JSON.parse(fs.readFileSync("chatrooms.json"));
 let chatroomparticipants = {
     // 'chat': [ws1, ws2]
 };
+
+let logins = JSON.parse(fs.readFileSync("./logins.json"));
 
 let chathistories = {};
 
@@ -29,14 +32,30 @@ function broadcast (chatroom, content) {
     }
 }
 
+function validatePasswd(hash, salt, passwdattempt) {
+    return hash == Buffer.from(createHash('sha256').update(passwdattempt + salt).digest('hex')).toString('base64');
+}
+
+function hashPassword(passwd) {
+    let salt = randomBytes(127).toString("base64");
+    let hash = Buffer.from(createHash('sha256').update(passwd + salt).digest('hex')).toString('base64');
+    
+    return {
+        salt: salt,
+        hash: hash,
+    };
+}
+
 wss.on("connection", (ws, req) => {
     let username;
     let chatroom;
+    let loggedin = false;
 
     ws.on("message", (data) => {
         let args = data.toString().split(" ");
         switch (args[0]) {
             case "JOIN":
+                if (!loggedin) break;
                 if (ischatroom(chatroom)) {
                     chatroomparticipants[chatroom].splice(chatroomparticipants[chatroom].indexOf(ws), 1);
                     broadcast(chatroom, "EXIT " + username);
@@ -69,9 +88,32 @@ wss.on("connection", (ws, req) => {
                 }
                 break;
             case "AUTH":
+                if (args.length < 3) break;
                 username = args[1];
+                if (username in logins) {
+                    let success = validatePasswd(logins[username]['hash'], logins[username]['salt'], args[2]);
+                    if (!success) {
+                        username = "";
+                        ws.send("ERR LOGIN");
+                        console.log("login attempt failed");
+                    }
+                    else {
+                        loggedin = true
+                    };
+                }
+                else {
+                    let login = hashPassword(args[2]);
+                    logins[username] = {};
+                    console.log(login.hash);
+                    console.log(login.salt);
+                    logins[username]['hash'] = login.hash.toString();
+                    logins[username]['salt'] = login.salt.toString();
+                    loggedin = true;
+                    fs.writeFileSync("./logins.json", JSON.stringify(logins, "utf8"));
+                }
                 break;
             case "MSG":
+                if (!loggedin) break;
                 if (args[1].length == 0) break;
                 if (!ischatroom(chatroom)) break;
                 let msg = args.slice(1).join(" ");
