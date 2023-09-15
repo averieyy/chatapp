@@ -1,6 +1,6 @@
 # IRC-like messaging app
 
-## NOTE: The passwords entered will not be secured, as this server does not yet support SSL. They are stored hashed and salted with SHA3.
+## NOTE: The passwords entered will not be secured, as this server does not yet support SSL. They are stored hashed and salted with SHA256.
 
 
 

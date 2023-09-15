@@ -1,3 +1,5 @@
+/* Inits & requires */
+
 const { WebSocketServer } = require("ws");
 const { parse } = require("url");
 const fs = require("fs");
@@ -17,6 +19,8 @@ const server = createServer();
 const wss = new WebSocketServer({
     noServer: true
 });
+
+/* Actual code */
 
 function ischatroom (chatroom) {
     for (let cr of chatrooms['chatrooms']) {
