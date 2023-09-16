@@ -174,6 +174,12 @@ function renderusers () {
 async function renderthemes () {
   let themesjson = await (await fetch("/themes/themes.json")).json();
   for (let th in themesjson['themes']) {
+    let preloadtheme = document.createElement("link");
+    preloadtheme.rel = "preload";
+    preloadtheme.as = "style";
+    preloadtheme.href = themesjson['themes'][th]['href'];
+    document.head.appendChild(preloadtheme);
+
     let currentthemeelement = document.createElement("div");
     currentthemeelement.className = "theme";
     currentthemeelement.style.backgroundColor = themesjson['themes'][th]['colour'];
