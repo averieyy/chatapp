@@ -11,6 +11,11 @@ let chatroomparticipants = {
   // 'chat': [ws1, ws2]
 };
 
+// Fill <<chatroomparticipants>> with empty arrays
+for (let chatroom of chatrooms['chatrooms']) {
+  chatroomparticipants[chatroom['name']] = [];
+}
+
 let logins;
 if (!fs.existsSync("./logins.json")) {
   logins = {};
