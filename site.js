@@ -138,6 +138,7 @@ function joinRoom(room){
 async function getchatrooms () {
   let chatrooms = await fetch("/chatrooms");
   chroomjson = await chatrooms.json();
+  chatroomlist.innerHTML = "";
   for (let chatroom of chroomjson['chatrooms']) {
     let chatroomelement = document.createElement("div");
     chatroomelement.className = "chatroom";
