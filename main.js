@@ -38,6 +38,7 @@ function ischatroom(chatroom) {
 }
 
 function broadcastAll(content) {
+  console.log(chatroomparticipants);
   for (let chatroom of chatrooms['chatrooms']) {
     broadcast(chatroom['name'], content);
   }
@@ -144,10 +145,10 @@ wss.on("connection", (ws, req) => {
         if (args[1].length == 0) break;
         if (ischatroom(args[1])) break;
         if (logins[username]['privileges'] & 1) {
-          broadcastAll("CHADD");
+          broadcastAll("CHADD " + args[1]);
           chatrooms['chatrooms'].push({ "name": args[1], "description": args.splice(2).join(" ") });
           fs.writeFileSync("./chatrooms.json", JSON.stringify(chatrooms, "utf8"));
-          chatroomparticipants[args[1]] = [];
+          chatroomparticipants[args[1]] = [ws];
         }
     }
   });

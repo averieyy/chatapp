@@ -34,6 +34,10 @@ ws.addEventListener("message", (ev) => {
       chathistory = args.splice(1).join(" ").trim();
       renderchathistory();
       break;
+    case "CHADD":
+      getchatrooms();
+      chistorybox.className = "wsdetail";
+      chistorybox.innerText += "\nServer " + args[1] + " got created.\nJoin now!";
     default:
       chathistory += "\n" + msg;
       renderline(msg)
