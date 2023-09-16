@@ -8,6 +8,9 @@ let selecteduser;
 
 const background = document.getElementById("background");
 const themelink = document.getElementById("theme");
+const lightmode = document.getElementById("lightmode");
+const themechange = document.getElementById("themechange");
+const themelist = document.getElementById("themelist");
 
 const chistorybox = document.getElementById("chathistory");
 const chatroomlist = document.getElementById("chatroomlist");
@@ -15,8 +18,10 @@ const userlist = document.getElementById("userlist");
 const msgin = document.getElementById("messagein");
 const msgbtn = document.getElementById("msgsubmit");
 const title = document.getElementById("title");
-const lightmode = document.getElementById("lightmode");
 const description = document.getElementById("description");
+
+themechange.addEventListener("mouseenter", () => themelist.hidden = false);
+themechange.addEventListener("mouseleave", () => themelist.hidden = true);
 
 lightmode.addEventListener("mousedown", () => background.hidden = true);
 lightmode.addEventListener("mouseup", () => background.hidden = false);
@@ -166,4 +171,18 @@ function renderusers () {
   }
 }
 
+async function renderthemes () {
+  let themesjson = await (await fetch("/themes/themes.json")).json();
+  for (let th in themesjson['themes']) {
+    let currentthemeelement = document.createElement("div");
+    currentthemeelement.className = "theme";
+    currentthemeelement.style.backgroundColor = themesjson['themes'][th]['colour'];
+    currentthemeelement.addEventListener("click", () => {
+      themelink.href = themesjson['themes'][th]['href'];
+    });
+    themelist.appendChild(currentthemeelement);
+  }
+}
+
+renderthemes();
 getchatrooms();
