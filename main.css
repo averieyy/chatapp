@@ -105,6 +105,7 @@ input {
   color: #cf9f9f;
 }
 
+
 #chatroomselector {
   margin-left: 10px;
   padding: 5px;
@@ -186,5 +187,20 @@ h1 {
 	user-select: none;
 }
 #lightmode:hover {
+	color: #ffffff;
+}
+
+#CHADDbtn {
+	top: 5px;
+	left: 5px;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	text-align: center;
+	font-size: 38px;
+	color: #0f0f0f;
+	user-select: none;
+}
+#CHADDbtn:hover {
 	color: #ffffff;
 }
