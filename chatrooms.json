@@ -1,1 +1,9 @@
-{"chatrooms":[{"name":"chat","description":"A nice chatroom for normal conversation"},{"name":"aoeuaoeu","description":"aoeu"},{"name":"test","description":"test"}],"default":"chat"}
+{
+  "chatrooms": [
+    {
+      "name": "chat",
+      "description": "A nice chatroom for normal conversation"
+    }
+  ],
+  "default": "chat"
+}

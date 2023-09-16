@@ -130,6 +130,7 @@ wss.on("connection", (ws, req) => {
           logins[username]['salt'] = login.salt.toString();
           logins[username]['privileges'] = 0;
           loggedin = true;
+          ws.send("LOGIN SUCC " + logins[username]['privileges'])
           fs.writeFileSync("./logins.json", JSON.stringify(logins, "utf8"));
         }
         break;
