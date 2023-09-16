@@ -38,7 +38,7 @@ function ischatroom(chatroom) {
 }
 
 function broadcastAll(content) {
-  console.log(chatroomparticipants);
+  console.log(chatrooms['chatrooms']);
   for (let chatroom of chatrooms['chatrooms']) {
     broadcast(chatroom['name'], content);
   }
@@ -113,9 +113,9 @@ wss.on("connection", (ws, req) => {
           let success = validatePasswd(logins[username]['hash'], logins[username]['salt'], args[2]);
           if (!success) {
             username = "";
-            ws.send("ERR LOGIN");
-          }
-          else {
+            ws.send("LOGIN ERR");
+          } else {
+            ws.send("LOGIN SUCC " + logins[username]['privileges'])
             loggedin = true
           };
         } else {
@@ -143,12 +143,14 @@ wss.on("connection", (ws, req) => {
       case "CHADD":
         if (!loggedin) break;
         if (args[1].length == 0) break;
-        if (ischatroom(args[1])) break;
+        if (ischatroom(args[1])) {
+          ws.send("CHROOM EXISTS")
+        }
         if (logins[username]['privileges'] & 1) {
-          broadcastAll("CHADD " + args[1]);
           chatrooms['chatrooms'].push({ "name": args[1], "description": args.splice(2).join(" ") });
           fs.writeFileSync("./chatrooms.json", JSON.stringify(chatrooms, "utf8"));
           chatroomparticipants[args[1]] = [ws];
+          broadcastAll("CHADD " + args[1]);
         }
     }
   });
