@@ -1,19 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap');
-
-* {
-  font-family: 'JetBrains Mono', 'Consolas', 'Consolaz', monospace;
-  color: #efefef;
-}
-
-*::selection {
-  background-color: #efefef;
-  color: #3f3f3f;
+html {
+  background-color: #ffffff;
 }
 
 body {
   margin: 0px;
-  min-height: 100%;
-  background-color: #0f0f0f;
+}
+
+#background {
+  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
 }
 
 #title {
@@ -28,7 +24,6 @@ h4 {
 
 #chathistory {
   height: 50vh;
-  background-color: #1a1a1a;
   margin-bottom: 10px;
   padding: 5px;
   border-radius: 5px;
@@ -48,7 +43,6 @@ h4 {
 #chatbox {
   max-width: 40vw;
   width: 400px;
-  background-color: #272727;
   padding: 10px;
   border-radius: 5px;
   float: left;
@@ -62,8 +56,6 @@ h4 {
   all:unset;
   width: calc(25% - 30px);
   text-align: center;
-  background-color: #1f1f1f;
-  color: #efefef;
   padding: 5px;
   cursor: pointer;
   user-select: none;
@@ -75,8 +67,6 @@ h4 {
   all: unset;
   width: 75%;
   padding: 5px;
-  color: #efefef;
-  background-color: #1f1f1f;
   border-radius: 5px;
 }
 
@@ -90,19 +80,16 @@ input {
 
 .wsmention {
   margin: 0px;
-  color: #904000;
 }
 
 .wsdetail {
   font-style: italic;
-  color: #cfcfcf;
   margin: 0px;
 }
 
 .wswarning {
   font-style: italic;
   font-weight: bold;
-  color: #cf9f9f;
 }
 
 #chatroomselector {
@@ -111,7 +98,6 @@ input {
   max-width: 25vw;
   width: 250px;
   float: right;
-  background-color: #1f1f1f;
   border-radius: 10px;
   padding-top: 30px;
   padding-bottom: 30px;
@@ -127,12 +113,10 @@ h1 {
 
 #chatroomlist {
   margin-left: 20px;
-  border-left: 2px solid #efefef;
 }
 
 .chatroom {
   padding-left: 10px;
-  border-bottom: 2px solid #efefef;
   padding-right: 10px;
   width: fit-content;
   cursor: pointer;
@@ -146,7 +130,6 @@ h1 {
 	float: left;
   margin-right: 10px;
   padding: 5px;
-	background-color: #1f1f1f;
 	border-radius: 10px;
   padding-top: 30px;
   padding-bottom: 30px;
@@ -158,12 +141,10 @@ h1 {
 
 #userlist {
   margin-left: 20px;
-  border-left: 2px solid #efefef;
 }
 
 .user {
   padding-left: 10px;
-  border-bottom: 2px solid #efefef;
   padding-right: 10px;
   width: fit-content;
   cursor: pointer;
@@ -172,7 +153,6 @@ h1 {
 }
 
 #lightmode {
-	background-color: #3f3f3f;
 	position: absolute;
 	top: 10px;
 	left: 10px;
@@ -182,9 +162,27 @@ h1 {
 	cursor: pointer;
 	text-align: center;
 	font-size: 38px;
-	color: #0f0f0f;
 	user-select: none;
 }
 #lightmode:hover {
 	color: #ffffff;
+}
+
+#themechange {
+  padding: 10px;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	border-radius: 25px;
+	cursor: pointer;
+	text-align: center;
+	font-size: 20px;
+	user-select: none;
+}
+
+.theme {
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  border-radius: 15px;
 }
