@@ -155,6 +155,7 @@ function renderusers () {
   for (let user of currentchatusers) {
     let userelement = document.createElement("div");
     userelement.className = "user";
+    if (selecteduser == user) userelement.classList.add("wsmention");
     userelement.innerText = "@"+user;
     userelement.addEventListener("click", () => {
       if (selecteduser == user) selecteduser = "";

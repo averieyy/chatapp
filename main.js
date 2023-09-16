@@ -11,7 +11,15 @@ let chatroomparticipants = {
 	// 'chat': [ws1, ws2]
 };
 
-let logins = JSON.parse(fs.readFileSync("./logins.json"));
+let logins;
+if (!fs.existsSync("./logins.json")) {
+	logins = {};
+}
+else {
+	let rawlogins = fs.readFileSync("./logins.json");
+	if (rawlogins == "") logins = {};
+	else logins = JSON.parse(rawlogins);
+}
 
 let chathistories = {};
 
@@ -30,7 +38,7 @@ function ischatroom (chatroom) {
 }
 
 function broadcast (chatroom, content) {
-	console.log(chatroom);
+	console.log(`${chatroom} ${content}`);
 	for (let user of chatroomparticipants[chatroom]) {
 		user.send(content);
 	}
@@ -99,7 +107,6 @@ wss.on("connection", (ws, req) => {
 					if (!success) {
 						username = "";
 						ws.send("ERR LOGIN");
-						console.log("login attempt failed");
 					}
 					else {
 						loggedin = true
@@ -108,8 +115,6 @@ wss.on("connection", (ws, req) => {
 				else {
 					let login = hashPassword(args[2]);
 					logins[username] = {};
-					console.log(login.hash);
-					console.log(login.salt);
 					logins[username]['hash'] = login.hash.toString();
 					logins[username]['salt'] = login.salt.toString();
 					loggedin = true;
@@ -122,7 +127,6 @@ wss.on("connection", (ws, req) => {
 				if (!ischatroom(chatroom)) break;
 				let msg = args.slice(1).join(" ");
 
-				console.log(chatroom + " " + username + " " + msg);
 				chathistories[chatroom] += "MSG " + username + " " + msg + "\n";
 
 				if (!chatroomparticipants[chatroom] && ischatroom(chatroom)) chatroomparticipants[chatroom] = [ws];
@@ -134,7 +138,6 @@ wss.on("connection", (ws, req) => {
 
 	ws.on("close", (w, code, reason) => {
 		if (ischatroom(chatroom)) {
-			console.log(chatroom);
 			chatroomparticipants[chatroom].splice(chatroomparticipants[chatroom].indexOf(ws), 1);
 			chathistories[chatroom] += "EXIT " + username + "\n";
 
