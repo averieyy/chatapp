@@ -6,6 +6,9 @@ let loggedin = false;
 let currentchatusers = [];
 let selecteduser;
 
+const background = document.getElementById("background");
+const themelink = document.getElementById("theme");
+
 const chistorybox = document.getElementById("chathistory");
 const chatroomlist = document.getElementById("chatroomlist");
 const userlist = document.getElementById("userlist");
@@ -15,12 +18,9 @@ const title = document.getElementById("title");
 const lightmode = document.getElementById("lightmode");
 const description = document.getElementById("description");
 
-lightmode.addEventListener("mousedown", () => {
-	document.body.style.backgroundColor = '#ffffff';
-});
-
-lightmode.addEventListener("mouseup", () => document.body.style.backgroundColor = "#0f0f0f");
-lightmode.addEventListener("mouseleave", () => document.body.style.backgroundColor = "#0f0f0f");
+lightmode.addEventListener("mousedown", () => background.hidden = true);
+lightmode.addEventListener("mouseup", () => background.hidden = false);
+lightmode.addEventListener("mouseleave", () => background.hidden = false);
 
 let chathistory = "";
 let currentchatroom = "";
