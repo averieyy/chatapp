@@ -66,7 +66,11 @@ function hashPassword(passwd) {
 
 wss.on("connection", (ws, req) => {
   let username;
+  let privileges;
   let chatroom;
+  let lastmessagetimings = [];
+  let timeoutuntil = 0;
+  let felonies = 0;
   let loggedin = false;
 
   ws.on("message", (data) => {
@@ -116,6 +120,7 @@ wss.on("connection", (ws, req) => {
           }
           else {
             loggedin = true
+            privileges = logins[username]['privileges'];
           };
         } else {
           let login = hashPassword(args[2]);
@@ -131,6 +136,26 @@ wss.on("connection", (ws, req) => {
         if (!loggedin) break;
         if (args[1].length == 0) break;
         if (!ischatroom(chatroom)) break;
+
+        // Anti spam
+        if (!(privileges & 2)) {
+          let now = new Date().getTime();
+          if (timeoutuntil > now) break;
+          for (let message of lastmessagetimings) {
+            if (message + 20000 < now) lastmessagetimings.splice(lastmessagetimings.indexOf(message), 1);
+          }
+          lastmessagetimings.push(now)
+          if (lastmessagetimings.length >= 13) {
+            // Punishment
+            ws.send("NOTE Spamming is disallowed, you will be timed out for " + 4*(2**felonies) + " seconds");
+            timeoutuntil = now + 4 * (2**felonies) * 1000;
+            felonies++;
+            lastmessagetimings = [];
+            break;
+          }
+        }
+        
+
         let msg = args.slice(1).join(" ");
 
         chathistories[chatroom] += "MSG " + username + " " + msg + "\n";
@@ -143,7 +168,7 @@ wss.on("connection", (ws, req) => {
         if (!loggedin) break;
         if (args[1].length == 0) break;
         if (ischatroom(args[1])) break;
-        if (logins[username]['privileges'] & 1) {
+        if (privileges & 1) {
           broadcastAll("CHADD");
           chatrooms['chatrooms'].push({ "name": args[1], "description": args.splice(2).join(" ") });
           fs.writeFileSync("./chatrooms.json", JSON.stringify(chatrooms, "utf8"));
