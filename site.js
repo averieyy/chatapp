@@ -19,7 +19,6 @@ const userlist = document.getElementById("userlist");
 const msgin = document.getElementById("messagein");
 const msgbtn = document.getElementById("msgsubmit");
 const title = document.getElementById("title");
-const lightmode = document.getElementById("lightmode");
 const chaddbtn = document.getElementById("CHADDbtn");
 const description = document.getElementById("description");
 const chatroomselector = document.getElementById("chatroomselector");

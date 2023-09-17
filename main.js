@@ -176,7 +176,7 @@ wss.on("connection", (ws, req) => {
         if (!ischatroom(chatroom)) break;
 
         // Anti spam
-        if (!(privileges & 1<<1)) {
+        if (!(privileges & (1<<1))) {
           let now = new Date().getTime();
           if (timeoutuntil > now) break;
           for (let message of lastmessagetimings) {
