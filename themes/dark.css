@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap');
+
+* {
+  font-family: 'JetBrains Mono', 'Consolas', 'Consolaz', monospace;
+  color: #efefef;
+}
+
+*::selection {
+  background-color: #efefef;
+  color: #3f3f3f;
+}
+
+body {
+  background-color: #0f0f0f;
+}
+
+#chathistory {
+  background-color: #1a1a1a;
+}
+
+#chatbox {
+  background-color: #272727;
+}
+
+#msgsubmit {
+  background-color: #1f1f1f;
+  color: #efefef;
+}
+
+#messagein {
+  color: #efefef;
+  background-color: #1f1f1f;
+}
+
+.wsmention {
+  color: #904000;
+}
+
+.wsdetail {
+  color: #cfcfcf;
+}
+
+.wswarning {
+  color: #cf9f9f;
+}
+
+#chatroomselector {
+  background-color: #1f1f1f;
+}
+
+#chatroomlist {
+  border-left: 2px solid #efefef;
+}
+
+.chatroom {
+  border-bottom: 2px solid #efefef;
+}
+
+#users {
+	background-color: #1f1f1f;
+}
+
+#userlist {
+  border-left: 2px solid #efefef;
+}
+
+.user {
+  border-bottom: 2px solid #efefef;
+}
+
+#lightmode {
+	background-color: #3f3f3f;
+	color: #0f0f0f;
+}
+
+#themechange {
+	background-color: #3f3f3f;
+	color: #efefef;
+}

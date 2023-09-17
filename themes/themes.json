@@ -1,0 +1,16 @@
+{
+    "themes": [
+        {
+            "name": "dark",
+            "description": "Default dark",
+            "href": "./themes/dark.css",
+            "colour": "#cf9f9f"
+        },
+        {
+            "name": "mocha",
+            "description": "Catppuccin mocha",
+            "href": "./themes/mocha.css",
+            "colour": "#cba6f7"
+        }
+    ]
+}

@@ -7,6 +7,12 @@ let loggedin = false;
 let currentchatusers = [];
 let selecteduser;
 
+const background = document.getElementById("background");
+const themelink = document.getElementById("theme");
+const lightmode = document.getElementById("lightmode");
+const themechange = document.getElementById("themechange");
+const themelist = document.getElementById("themelist");
+
 const chistorybox = document.getElementById("chathistory");
 const chatroomlist = document.getElementById("chatroomlist");
 const userlist = document.getElementById("userlist");
@@ -18,12 +24,12 @@ const chaddbtn = document.getElementById("CHADDbtn");
 const description = document.getElementById("description");
 const chatroomselector = document.getElementById("chatroomselector");
 
-lightmode.addEventListener("mousedown", () => {
-  document.body.style.backgroundColor = '#ffffff';
-});
+themechange.addEventListener("mouseenter", () => themelist.hidden = false);
+themechange.addEventListener("mouseleave", () => themelist.hidden = true);
 
-lightmode.addEventListener("mouseup", () => document.body.style.backgroundColor = "#0f0f0f");
-lightmode.addEventListener("mouseleave", () => document.body.style.backgroundColor = "#0f0f0f");
+lightmode.addEventListener("mousedown", () => background.hidden = true);
+lightmode.addEventListener("mouseup", () => background.hidden = false);
+lightmode.addEventListener("mouseleave", () => background.hidden = false);
 
 chaddbtn.addEventListener("mousedown", () => {
   title.innerText = "Enter name";
@@ -243,4 +249,24 @@ function renderusers() {
   }
 }
 
+async function renderthemes () {
+  let themesjson = await (await fetch("/themes/themes.json")).json();
+  for (let th in themesjson['themes']) {
+    let preloadtheme = document.createElement("link");
+    preloadtheme.rel = "preload";
+    preloadtheme.as = "style";
+    preloadtheme.href = themesjson['themes'][th]['href'];
+    document.head.appendChild(preloadtheme);
+
+    let currentthemeelement = document.createElement("div");
+    currentthemeelement.className = "theme";
+    currentthemeelement.style.backgroundColor = themesjson['themes'][th]['colour'];
+    currentthemeelement.addEventListener("click", () => {
+      themelink.href = themesjson['themes'][th]['href'];
+    });
+    themelist.appendChild(currentthemeelement);
+  }
+}
+
+renderthemes();
 getchatrooms();
