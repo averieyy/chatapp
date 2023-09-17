@@ -176,7 +176,7 @@ function renderline(line) {
           console.log(room);
           permissions = lineargs[2] - 0;
           currenthtmlelement.innerText = "Debug";
-          if (permissions & 1) chaddbtn.innerText = "+"; //1 allows the user te create chats
+          if (permissions & 1) chaddbtn.hidden = false; //1 allows the user te create chats
           break;
       }
       break;
@@ -184,6 +184,9 @@ function renderline(line) {
       getchatrooms();
       chistorybox.className = "wsdetail";
       chistorybox.innerText += "\nServer " + lineargs[1] + " got created.\nJoin now!";
+      break;
+    case "USER":
+      if (lineargs[1] == "BANNED") location = location;
       break;
   }
 
@@ -227,6 +230,15 @@ function renderusers() {
       else selecteduser = user;
       renderchathistory();
     });
+    // Add ban button if user is privileged
+    if (permissions & 4) {
+      let banicon = document.createElement("button");
+      banicon.className = "banicon";
+      banicon.addEventListener("click", (ev) => {
+        ws.send("BAN " + user);
+      });
+      userelement.appendChild(banicon);
+    }
     userlist.appendChild(userelement);
   }
 }
