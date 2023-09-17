@@ -11,4 +11,4 @@ Possible future features
 
 - [x] Multiple channels (chatrooms)
 
-- [ ] Username & Passwords
+- [x] Username & Passwords

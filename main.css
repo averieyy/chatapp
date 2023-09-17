@@ -92,6 +92,7 @@ input {
   font-weight: bold;
 }
 
+
 #chatroomselector {
   margin-left: 10px;
   padding: 5px;
@@ -99,8 +100,7 @@ input {
   width: 250px;
   float: right;
   border-radius: 10px;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 25px;
 }
 
 #chatroomselector h1 {
@@ -113,6 +113,8 @@ h1 {
 
 #chatroomlist {
   margin-left: 20px;
+  border-left: 2px solid #efefef;
+  margin-bottom: 25px;
 }
 
 .chatroom {
@@ -150,9 +152,15 @@ h1 {
   cursor: pointer;
   margin-top: 5px;
   user-select: none;
+  justify-content: center;
 }
 
 #lightmode {
+	background-color: #3f3f3f;
+  background-image: url("assets/icons/sun.png");
+  background-size: 40px;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
 	position: absolute;
 	top: 10px;
 	left: 10px;
@@ -164,8 +172,30 @@ h1 {
 	font-size: 38px;
 	user-select: none;
 }
-#lightmode:hover {
-	color: #ffffff;
+
+#CHADDbtn {
+	width: 32px;
+	height: 32px;
+  margin: 10px;
+	cursor: pointer;
+	text-align: center;
+	font-size: 38px;
+	user-select: none;
+  background-image: url("assets/icons/plus.png");
+  background-size: contain;
+}
+#CHADDbtn:hover {
+  filter: brightness(50%);
+}
+
+.banicon {
+  all: unset;
+  width: 20px;
+  height: 20px;
+  background-image: url("assets/icons/ban.png");
+  background-size: 20px;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
 }
 
 #themechange {
