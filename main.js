@@ -1,4 +1,4 @@
-/* Inits & requires */
+/* Requires */
 
 const { WebSocketServer } = require("ws");
 const { parse } = require("url");
@@ -6,6 +6,18 @@ const fs = require("fs");
 const { createServer } = require("http");
 const { createHash, randomBytes } = require("crypto");
 
+/* Variables with inits */
+
+// Banned users
+let bannedusers = {
+  "banned": [],
+  "ipbanned": []
+};
+if (fs.existsSync("./bannedusers.json")) {
+  bannedusers = JSON.parse(fs.readFileSync("./bannedusers.json"));
+}
+
+// Chatrooms
 let chatrooms = JSON.parse(fs.readFileSync("chatrooms.json"));
 let chatroomparticipants = {
   // 'chat': [ws1, ws2]
@@ -16,6 +28,7 @@ for (let chatroom of chatrooms['chatrooms']) {
   chatroomparticipants[chatroom['name']] = [];
 }
 
+// User logins
 let logins;
 if (!fs.existsSync("./logins.json")) {
   logins = {};
@@ -26,6 +39,7 @@ else {
   else logins = JSON.parse(rawlogins);
 }
 
+// Chathistory (stored by chatroom)
 let chathistories = {};
 
 const server = createServer();
@@ -33,7 +47,7 @@ const wss = new WebSocketServer({
   noServer: true
 });
 
-/* Actual code */
+/* Functions */
 
 function ischatroom(chatroom) {
   for (let cr of chatrooms['chatrooms']) {
@@ -42,8 +56,11 @@ function ischatroom(chatroom) {
   return false;
 }
 
+function isuser(username) {
+  return username in logins;
+}
+
 function broadcastAll(content) {
-  console.log(chatrooms['chatrooms']);
   for (let chatroom of chatrooms['chatrooms']) {
     broadcast(chatroom['name'], content);
   }
@@ -70,7 +87,10 @@ function hashPassword(passwd) {
   };
 }
 
+/* HTTP & WS Server */
+
 wss.on("connection", (ws, req) => {
+  // let ip = req.socket.remoteAddress; // For possible ip bans
   let username;
   let privileges;
   let chatroom;
@@ -81,6 +101,11 @@ wss.on("connection", (ws, req) => {
 
   ws.on("message", (data) => {
     let args = data.toString().split(" ");
+    if (loggedin && bannedusers['banned'].includes(username)) {
+      ws.send("NOTE This account has been banned.");
+      ws.send("USER BANNED");
+      loggedin = false;
+    }
     switch (args[0]) {
       case "JOIN":
         if (!loggedin) break;
@@ -120,12 +145,18 @@ wss.on("connection", (ws, req) => {
         username = args[1];
         if (username in logins) {
           let success = validatePasswd(logins[username]['hash'], logins[username]['salt'], args[2]);
+          if (bannedusers['banned'].includes(username)) {
+            username = "";
+            ws.send("LOGIN ERR");
+            ws.send("NOTE This account has been banned");
+            break;
+          }
           if (!success) {
             username = "";
             ws.send("LOGIN ERR");
           } else {
-            ws.send("LOGIN SUCC " + logins[username]['privileges'])
-            loggedin = true
+            ws.send("LOGIN SUCC " + logins[username]['privileges']);
+            loggedin = true;
             privileges = logins[username]['privileges'];
           };
         } else {
@@ -145,7 +176,7 @@ wss.on("connection", (ws, req) => {
         if (!ischatroom(chatroom)) break;
 
         // Anti spam
-        if (!(privileges & 2)) {
+        if (!(privileges & 1<<1)) {
           let now = new Date().getTime();
           if (timeoutuntil > now) break;
           for (let message of lastmessagetimings) {
@@ -184,6 +215,34 @@ wss.on("connection", (ws, req) => {
           chatroomparticipants[args[1]] = [ws];
           broadcastAll("CHADD " + args[1]);
         }
+        break;
+      case "BAN":
+        if (!loggedin) break;
+        if (args.length == 1) break;
+        if (args[1].length == 0) break;
+        if (!(privileges & (1<<2))) break;
+        if (!isuser(args[1])) break;
+
+        bannedusers['banned'].push(args[1]);
+        if (args.length <= 2) args.push("The ban hammer has spoken!");
+        broadcastAll(`BAN ${args[1]} ${username} ${args.splice(2)}`);
+        fs.writeFileSync("bannedusers.json", JSON.stringify(bannedusers));
+        break;
+      case "IPBAN":
+        if (!loggedin) break;
+        if (args.length == 1) break;
+        if (args[1].length == 0) break;
+        if (!(privileges & (1<<3))) break;
+        if (!isuser(args[1])) break;
+
+        bannedusers['ipbanned'].push(args[1]);
+        if (args.length <= 2) args.push("The ban hammer has spoken!");
+        broadcastAll(`IPBAN ${username} ${args.splice(2)}`);
+        fs.writeFileSync("bannedusers.json", JSON.stringify(bannedusers));
+        break;
+      default: // In case a nerd messes up
+        ws.send("NOTE This command is not supported.");
+        break;
     }
   });
 
