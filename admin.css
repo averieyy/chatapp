@@ -1,35 +1,97 @@
 * {
-    font-family: 'JetBrains Mono', 'Consolas', 'Consolaz', monospace;
-    color: #cdd6f4;
+  font-family: 'JetBrains Mono', 'Consolas', 'Consolaz', monospace;
+  color: #cdd6f4;
 }
 
 *::selection {
-    background-color: #efefef;
-    color: #1e1e2e;
+  background-color: #efefef;
+  color: #1e1e2e;
 }
 
 body {
-    margin: 0px;
-    background-color: #11111b;
+  margin: 0px;
+  background-color: #11111b;
 }
 
 nav {
-    background-color: #1e1e2e;
-    overflow-x: auto;
+  background-color: #1e1e2e;
+  overflow-x: auto;
 }
 
 .navelement {
-    padding: 10px;
-    background-color: #1e1e2e;
-    padding-bottom: 12px;
-    cursor: pointer;
-    width: fit-content;
-    float: left;
-    user-select: none;
+  padding: 10px;
+  background-color: #1e1e2e;
+  padding-bottom: 12px;
+  cursor: pointer;
+  width: fit-content;
+  float: left;
+  user-select: none;
 }
 
 .navelement.selected {
-    padding-bottom: 10px;
-    background-color: #181825;
-    border-bottom: #cdd6f4 2px solid;
+  padding-bottom: 10px;
+  background-color: #181825;
+  border-bottom: #cdd6f4 2px solid;
+}
+
+.navelement.disabled {
+  background-color: #181825;
+  font-style: italic;
+  color: #6c7086;
+}
+
+#overlay {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  backdrop-filter: blur(5px);
+  left: 0px;
+  top: 0px;
+}
+
+#loginpopup {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: fit-content;
+  height: fit-content;
+  padding: 10px;
+
+  background-color: #1e1e2e;
+  border-radius: 10px;
+}
+#usernamein {
+  all: unset;
+  background-color: #181825;
+  border: none;
+  outline: none;
+  padding: 10px;
+  margin: 3px;
+  border-radius: 5px;
+}
+#passwdin {
+  all: unset;
+  background-color: #181825;
+  border: none;
+  outline: none;
+  padding: 10px;
+  margin: 3px;
+  border-radius: 5px;
+}
+#submitlogin {
+  all: unset;
+  background-color: #181825;
+  border: none;
+  outline: none;
+  padding: 10px;
+  cursor: pointer;
+  user-select: none;
+  margin: 3px;
+  border-radius: 5px;
+}
+
+#info {
+  max-width: 50vw;
+  margin: auto;
 }

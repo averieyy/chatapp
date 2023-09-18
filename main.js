@@ -261,6 +261,9 @@ wss.on("connection", (ws, req) => {
 });
 
 adminwss.on("connection", (ws, req) => {
+  let username;
+  let privileges;
+  let loggedin = false;
   ws.on("message", (data) => {
     let args = data.toString().split(" ");
     switch (args[0]) {
@@ -279,7 +282,7 @@ adminwss.on("connection", (ws, req) => {
             username = "";
             ws.send("LOGIN ERR");
           } else {
-            success = logins[username]['privileges'] == 0;
+            success = logins[username]['privileges'] != 0;
             if (!success) {
               ws.send("LOGIN ERR");
               ws.send("NOTE You aren't privileged enought to interact with the admin panel");
