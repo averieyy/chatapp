@@ -47,6 +47,10 @@ const wss = new WebSocketServer({
   noServer: true
 });
 
+const adminwss = new WebSocketServer({
+  noServer: true
+});
+
 /* Functions */
 
 function ischatroom(chatroom) {
@@ -256,11 +260,54 @@ wss.on("connection", (ws, req) => {
   });
 });
 
+adminwss.on("connection", (ws, req) => {
+  ws.on("message", (data) => {
+    let args = data.toString().split(" ");
+    switch (args[0]) {
+      case 'AUTH':
+        if (args.length < 3) break;
+        username = args[1];
+        if (username in logins) {
+          let success = validatePasswd(logins[username]['hash'], logins[username]['salt'], args[2]);
+          if (bannedusers['banned'].includes(username)) {
+            username = "";
+            ws.send("LOGIN ERR");
+            ws.send("NOTE This account has been banned");
+            break;
+          }
+          if (!success) {
+            username = "";
+            ws.send("LOGIN ERR");
+          } else {
+            success = logins[username]['privileges'] == 0;
+            if (!success) {
+              ws.send("LOGIN ERR");
+              ws.send("NOTE You aren't privileged enought to interact with the admin panel");
+              break;
+            }
+            ws.send("LOGIN SUCC " + logins[username]['privileges']);
+            loggedin = true;
+            privileges = logins[username]['privileges'];
+          };
+        } else {
+          ws.send("LOGIN ERR");
+          ws.send("NOTE You need to already have an account with privileges");
+        }
+        break;
+    }
+  });
+});
+
 server.on("upgrade", (req, sock, head) => {
   const { pathname } = parse(req.url);
   if (pathname == "/chat") {
     wss.handleUpgrade(req, sock, head, (ws) => {
       wss.emit("connection", ws, req);
+    });
+  }
+  if (pathname == "/admin") {
+    adminwss.handleUpgrade(req, sock, head, (ws) => {
+      adminwss.emit("connection", ws, req);
     });
   }
 });
@@ -289,6 +336,12 @@ server.on("request", (req, res) => {
           res.end();
         });
         break;
+      case '/adminpanel':
+        let file = fs.readFileSync("./admin.html");
+
+        res.writeHead(200);
+        res.write(file, "binary");
+        res.end();
       default:
         if (fs.existsSync("." + pathname)) {
 

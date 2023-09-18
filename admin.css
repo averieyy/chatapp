@@ -1,0 +1,35 @@
+* {
+    font-family: 'JetBrains Mono', 'Consolas', 'Consolaz', monospace;
+    color: #cdd6f4;
+}
+
+*::selection {
+    background-color: #efefef;
+    color: #1e1e2e;
+}
+
+body {
+    margin: 0px;
+    background-color: #11111b;
+}
+
+nav {
+    background-color: #1e1e2e;
+    overflow-x: auto;
+}
+
+.navelement {
+    padding: 10px;
+    background-color: #1e1e2e;
+    padding-bottom: 12px;
+    cursor: pointer;
+    width: fit-content;
+    float: left;
+    user-select: none;
+}
+
+.navelement.selected {
+    padding-bottom: 10px;
+    background-color: #181825;
+    border-bottom: #cdd6f4 2px solid;
+}
