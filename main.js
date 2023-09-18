@@ -180,7 +180,7 @@ wss.on("connection", (ws, req) => {
         if (!ischatroom(chatroom)) break;
 
         // Anti spam
-        if (!(privileges & (1<<1))) {
+        if (!(privileges & (1 << 1))) {
           let now = new Date().getTime();
           if (timeoutuntil > now) break;
           for (let message of lastmessagetimings) {
@@ -189,14 +189,14 @@ wss.on("connection", (ws, req) => {
           lastmessagetimings.push(now)
           if (lastmessagetimings.length >= 13) {
             // Punishment
-            ws.send("NOTE Spamming is disallowed, you will be timed out for " + 4*(2**felonies) + " seconds");
-            timeoutuntil = now + 4 * (2**felonies) * 1000;
+            ws.send("NOTE Spamming is disallowed, you will be timed out for " + 4 * (2 ** felonies) + " seconds");
+            timeoutuntil = now + 4 * (2 ** felonies) * 1000;
             felonies++;
             lastmessagetimings = [];
             break;
           }
         }
-        
+
 
         let msg = args.slice(1).join(" ");
 
@@ -224,7 +224,7 @@ wss.on("connection", (ws, req) => {
         if (!loggedin) break;
         if (args.length == 1) break;
         if (args[1].length == 0) break;
-        if (!(privileges & (1<<2))) break;
+        if (!(privileges & (1 << 2))) break;
         if (!isuser(args[1])) break;
 
         bannedusers['banned'].push(args[1]);
@@ -236,7 +236,7 @@ wss.on("connection", (ws, req) => {
         if (!loggedin) break;
         if (args.length == 1) break;
         if (args[1].length == 0) break;
-        if (!(privileges & (1<<3))) break;
+        if (!(privileges & (1 << 3))) break;
         if (!isuser(args[1])) break;
 
         bannedusers['ipbanned'].push(args[1]);
@@ -261,6 +261,13 @@ wss.on("connection", (ws, req) => {
 });
 
 adminwss.on("connection", (ws, req) => {
+  let username;
+  let privileges;
+  // let chatroom;
+  // let lastmessagetimings = [];
+  // let timeoutuntil = 0;
+  // let felonies = 0;
+  let loggedin = false;
   ws.on("message", (data) => {
     let args = data.toString().split(" ");
     switch (args[0]) {
@@ -279,7 +286,7 @@ adminwss.on("connection", (ws, req) => {
             username = "";
             ws.send("LOGIN ERR");
           } else {
-            success = logins[username]['privileges'] == 0;
+            success = logins[username]['privileges'] != 0;
             if (!success) {
               ws.send("LOGIN ERR");
               ws.send("NOTE You aren't privileged enought to interact with the admin panel");
@@ -293,6 +300,102 @@ adminwss.on("connection", (ws, req) => {
           ws.send("LOGIN ERR");
           ws.send("NOTE You need to already have an account with privileges");
         }
+        break;
+      case "CHADD":
+        if (!loggedin) break;
+        if (args[1].length == 0) break;
+        if (ischatroom(args[1])) {
+          ws.send("CHROOM EXISTS");
+          break;
+        }
+        if (privileges & 1) {
+          chatrooms['chatrooms'].push({ "name": args[1], "description": args.splice(2).join(" ") });
+          fs.writeFileSync("./chatrooms.json", JSON.stringify(chatrooms, "utf8"));
+          chatroomparticipants[args[1]] = [];
+          broadcastAll("CHADD " + args[1]);
+        }
+        break;
+      case "CHRM":
+        if (!loggedin) break;
+        if (args[1].length == 0) break;
+        if (ischatroom(args[1])) {
+          ws.send("CHRM DOESN'T EXIST");
+          break;
+        }
+        if (privileges & 1) {
+          let chrmindex = chatrooms['chatrooms'].find((chroomname) => {
+            return chroomname == args[1];
+          });
+          if (chrmindex == -1) {
+            ws.send("NOTE chroom doesn't exist")
+            break;
+          } else {
+            chatrooms['chatrooms'].splice(chrmindex, 1);
+          }
+          fs.writeFileSync("./chatrooms.json", JSON.stringify(chatrooms, "utf8"));
+          chatroomparticipants[args[1]] = [];
+          broadcastAll("CHRM " + args[1]);
+        }
+      case "BAN":
+        if (!loggedin) break;
+        if (args.length == 1) break;
+        if (args[1].length == 0) break;
+        if (!(privileges & (1 << 2))) break;
+        if (!isuser(args[1])) break;
+
+        bannedusers['banned'].push(args[1]);
+        if (args.length <= 2) args.push("The ban hammer has spoken!");
+        broadcastAll(`BAN ${args[1]} ${username} ${args.splice(2)}`);
+        fs.writeFileSync("bannedusers.json", JSON.stringify(bannedusers));
+        break;
+      case "UNBAN":
+        if (!loggedin) break;
+        if (args.length == 1) break;
+        if (args[1].length == 0) break;
+        if (!(privileges & (1 << 2))) break;
+        if (!isuser(args[1])) break;
+
+        let index = bannedusers.banned['banned'].indexOf(args[1]);
+        if (index == -1) {
+          ws.send("NOTE User hasn't been banned");
+        } else {
+          bannedusers.banned['banned'].splice(index, 1);
+        }
+        if (args.length <= 2) args.push("The ban hammer made a mistake!");
+        broadcastAll(`UNBAN ${args[1]} ${username} ${args.splice(2)}`);
+        fs.writeFileSync("bannedusers.json", JSON.stringify(bannedusers));
+        break;
+      case "IPBAN":
+        if (!loggedin) break;
+        if (args.length == 1) break;
+        if (args[1].length == 0) break;
+        if (!(privileges & (1 << 3))) break;
+        if (!isuser(args[1])) break;
+
+        bannedusers['ipbanned'].push(args[1]);
+        if (args.length <= 2) args.push("The ban hammer has spoken!");
+        broadcastAll(`IPBAN ${username} ${args.splice(2)}`);
+        fs.writeFileSync("bannedusers.json", JSON.stringify(bannedusers));
+        break;
+      default: // In case a nerd messes up
+        ws.send("NOTE This command is not supported.");
+        break;
+      case "IPUNBAN":
+        if (!loggedin) break;
+        if (args.length == 1) break;
+        if (args[1].length == 0) break;
+        if (!(privileges & (1 << 2))) break;
+        if (!isuser(args[1])) break;
+
+        let ipindex = bannedusers.banned['ipbanned'].indexOf(args[1]);
+        if (ipindex == -1) {
+          ws.send("NOTE User hasn't been banned");
+        } else {
+          bannedusers.banned['ipbanned'].splice(ipindex, 1);
+        }
+        if (args.length <= 2) args.push("The ban hammer made a mistake!");
+        broadcastAll(`IPUNBAN ${args[1]} ${username} ${args.splice(2)}`);
+        fs.writeFileSync("bannedusers.json", JSON.stringify(bannedusers));
         break;
     }
   });
