@@ -189,6 +189,7 @@ function renderline(line) {
       getchatrooms();
       chistorybox.className = "wsdetail";
       chistorybox.innerText += "\nServer " + lineargs[1] + " got created.\nJoin now!";
+      if (lineargs[1] == newch["name"]) joinRoom(newch);
       break;
     case "USER":
       if (lineargs[1] == "BANNED") location = location;

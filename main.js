@@ -212,7 +212,7 @@ wss.on("connection", (ws, req) => {
         if (privileges & 1) {
           chatrooms['chatrooms'].push({ "name": args[1], "description": args.splice(2).join(" ") });
           fs.writeFileSync("./chatrooms.json", JSON.stringify(chatrooms, "utf8"));
-          chatroomparticipants[args[1]] = [ws];
+          chatroomparticipants[args[1]] = [];
           broadcastAll("CHADD " + args[1]);
         }
         break;
