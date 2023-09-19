@@ -95,3 +95,68 @@ nav {
   max-width: 50vw;
   margin: auto;
 }
+
+#chroomgrid {
+  margin: auto;
+  margin-top: 15px;
+  display: grid;
+  width: 50vw;
+  height: 50vh;
+  gap: 15px;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.chat {
+  background-color: #1e1e2e;
+  height: 30vh;
+  padding: 10px;
+  border-radius: 5px;
+  float: left;
+  overflow-x: hidden;
+  overflow-wrap: break-word;
+}
+
+.innerchat {
+  background-color: #181825;
+  height: 100%;
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  scroll-behavior: smooth;
+  overflow-y: auto;
+}
+
+.msgsubmit {
+  background-color: #181825;
+  color: #cdd6f4;
+}
+
+.messagein {
+  color: #cdd6f4;
+  background-color: #181825;
+}
+
+.wsmention {
+  color: #fab387;
+}
+
+.wsdetail {
+  color: #a6adc8;
+}
+
+.wswarning {
+  color: #f38ba8;
+}
+
+.chat.default {
+  border: #cdd6f4 2px solid;
+  padding: 8px;
+}
+
+.chattitle {
+  margin: 0px;
+}
+
+.chatdesc {
+  margin: 0px;
+}

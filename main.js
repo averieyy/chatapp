@@ -17,6 +17,8 @@ if (fs.existsSync("./bannedusers.json")) {
   bannedusers = JSON.parse(fs.readFileSync("./bannedusers.json"));
 }
 
+let adminwslist= [];
+
 // Chatrooms
 let chatrooms = JSON.parse(fs.readFileSync("chatrooms.json"));
 let chatroomparticipants = {
@@ -67,6 +69,9 @@ function isuser(username) {
 function broadcastAll(content) {
   for (let chatroom of chatrooms['chatrooms']) {
     broadcast(chatroom['name'], content);
+  }
+  for (let ws of adminwslist) {
+    ws.send(content);
   }
 }
 
@@ -289,6 +294,7 @@ adminwss.on("connection", (ws, req) => {
               break;
             }
             ws.send("LOGIN SUCC " + logins[username]['privileges']);
+            adminwslist.push(ws);
             loggedin = true;
             privileges = logins[username]['privileges'];
           };
@@ -373,9 +379,6 @@ adminwss.on("connection", (ws, req) => {
         broadcastAll(`IPBAN ${username} ${args.splice(2)}`);
         fs.writeFileSync("bannedusers.json", JSON.stringify(bannedusers));
         break;
-      default: // In case a nerd messes up
-        ws.send("NOTE This command is not supported.");
-        break;
       case "IPUNBAN":
         if (!loggedin) break;
         if (args.length == 1) break;
@@ -392,6 +395,12 @@ adminwss.on("connection", (ws, req) => {
         if (args.length <= 2) args.push("The ban hammer made a mistake!");
         broadcastAll(`IPUNBAN ${args[1]} ${username} ${args.splice(2)}`);
         fs.writeFileSync("bannedusers.json", JSON.stringify(bannedusers));
+        break;
+      default: // In case a nerd messes up
+        ws.send("NOTE This command is not supported.");
+        break;
+      case "LISTCHROOMS":
+        if (privileges & 1) ws.send("CHROOMS " + JSON.stringify(chatrooms));
         break;
     }
   });

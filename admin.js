@@ -5,6 +5,8 @@ const usernamein = document.getElementById("usernamein");
 const passwdin = document.getElementById("passwdin");
 const loginbtn = document.getElementById("submitlogin");
 
+const chroomgrid = document.getElementById("chroomgrid");
+
 const priviligereqs = {
   'usernav': 4,
   'chroomnav': 1,
@@ -40,6 +42,23 @@ passwdin.addEventListener("keypress", (ev) => {
   if (ev.key == "Enter") login();
 });
 
+function switchTab(navelement) {
+  let generalid = navelement.id.split("nav")[0];
+  for (let configarea of configareas) {
+    if (configarea.id == generalid) {
+      configarea.hidden = false;
+    }
+    if (configarea.id == selectednavelement.id.split("nav")[0]) {
+      configarea.hidden = true;
+    }
+  }
+  if (generalid == "chroom") ws.send("LISTCHROOMS");
+  if (generalid == "user") ws.send("LISTUSERS");
+  navelement.classList.add("selected");
+  selectednavelement.classList.remove("selected");
+  selectednavelement = navelement;
+}
+
 function setUpNavBar() {
   for (let navelement of navelements) {
     let privileged = false;
@@ -49,17 +68,7 @@ function setUpNavBar() {
     if (privileged) {
       navelement.addEventListener("click", () => {
         if (navelement != selectednavelement) {
-          for (let configarea of configareas) {
-            if (configarea.id == navelement.id.split("nav")[0]) {
-              configarea.hidden = false;
-            }
-            if (configarea.id == selectednavelement.id.split("nav")[0]) {
-              configarea.hidden = true;
-            }
-          }
-          navelement.classList.add("selected");
-          selectednavelement.classList.remove("selected");
-          selectednavelement = navelement;
+          switchTab(navelement);
         }
       });
     } else {
@@ -69,7 +78,32 @@ function setUpNavBar() {
   }
 }
 
+function renderChrooms (chroomjson) {
+  console.log(chroomjson);
+  let chatrooms = JSON.parse(chroomjson);
+  chroomgrid.innerHTML = "";
+  for (let chatroom of chatrooms['chatrooms']) {
+    let chroomelement = document.createElement("div");
+    chroomelement.className = "chat";
+    if (chatroom['name'] == chatrooms['default']) {
+      chroomelement.classList.add("default");
+    }
 
+    let chroomtitle = document.createElement("h2");
+    let chroomdesc = document.createElement("h4");
+
+    chroomtitle.innerText = chatroom['name'];
+    chroomdesc.innerText = chatroom['description'];
+
+    chroomtitle.className = "chattitle";
+    chroomdesc.className = "chatdesc";
+
+    chroomelement.appendChild(chroomtitle);
+    chroomelement.appendChild(chroomdesc);
+
+    chroomgrid.appendChild(chroomelement);
+  }
+}
 
 ws.addEventListener("message", (ev) => {
   let msg = ev.data;
@@ -87,7 +121,11 @@ ws.addEventListener("message", (ev) => {
         setUpNavBar();
       }
       break;
-    case "":
+    case "CHROOMS":
+      renderChrooms(args.splice(1).join(" "));
+      break;
+    case "CHADD":
+      ws.send("LISTCHROOMS");
       break;
   }
 });
