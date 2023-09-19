@@ -18,6 +18,7 @@ let privileges;
 let loggedin = false;
 
 let navelements = document.getElementsByClassName("navelement");
+let configareas = document.getElementsByClassName("configarea");
 let selectednavelement = document.getElementById("infonav");
 
 function login() {
@@ -48,6 +49,14 @@ function setUpNavBar() {
     if (privileged) {
       navelement.addEventListener("click", () => {
         if (navelement != selectednavelement) {
+          for (let configarea of configareas) {
+            if (configarea.id == navelement.id.split("nav")[0]) {
+              configarea.hidden = false;
+            }
+            if (configarea.id == selectednavelement.id.split("nav")[0]) {
+              configarea.hidden = true;
+            }
+          }
           navelement.classList.add("selected");
           selectednavelement.classList.remove("selected");
           selectednavelement = navelement;
