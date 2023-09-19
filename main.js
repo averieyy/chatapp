@@ -263,10 +263,6 @@ wss.on("connection", (ws, req) => {
 adminwss.on("connection", (ws, req) => {
   let username;
   let privileges;
-  // let chatroom;
-  // let lastmessagetimings = [];
-  // let timeoutuntil = 0;
-  // let felonies = 0;
   let loggedin = false;
   ws.on("message", (data) => {
     let args = data.toString().split(" ");

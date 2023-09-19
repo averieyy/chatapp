@@ -10,10 +10,20 @@
 </head>
 
 <body>
+  <div id="overlay">
+    <div id="loginpopup">
+      <input type="text" id="usernamein"><br>
+      <input type="password" id="passwdin"><br>
+      <input type="button" id="submitlogin" value="Login">
+    </div>
+  </div>
   <main id="background">
     <nav>
-      <div id="mainnav" class="navelement selected">
-        Main
+      <div id="infonav" class="navelement selected">
+        Info
+      </div>
+      <div id="spamnav" class="navelement">
+        Spam
       </div>
       <div id="usernav" class="navelement">
         Users
@@ -22,14 +32,20 @@
         Chatrooms
       </div>
     </nav>
-    <div id="main" class="configarea">
+    <div id="info" class="configarea">
       <h1>Admin panel</h1>
+      <p>The admin panel exists to configure the server in ways the normal front-end can't. You need special privileges to edit some of the entries.</p>
+      <p>The Spam tab is dedicated to the anti-spam system.</p>
+      <p>The Users controls banning and unbanning of users.<p>
+      <p>The Chatrooms tab is for adding and removing chatrooms.<p>
     </div>
     <div id="user" class="configarea" hidden>
-
+      
     </div>
-    <div id="chat" class="configarea" hidden>
-
+    <div id="spam" class="configarea" hidden>
+      
+    </div>
+    <div id="chroom" class="configarea" hidden>
     </div>
   </main>
 </body>
