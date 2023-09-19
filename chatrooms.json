@@ -1,9 +1,1 @@
-{
-  "chatrooms": [
-    {
-      "name": "chat",
-      "description": "A nice chatroom for normal conversation"
-    }
-  ],
-  "default": "chat"
-}
+{"chatrooms":[{"name":"chat","description":"A nice chatroom for normal conversation"},{"name":"Naming","description":"that was wrong"}],"default":"chat"}
