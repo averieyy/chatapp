@@ -171,3 +171,17 @@ nav {
   background-repeat: no-repeat;
   cursor: pointer;
 }
+
+.chroomeditmenu {
+  background-color: #11111b;
+}
+
+.chroomeditbtn {
+  width: 20px;
+  height: 20px;
+  background-image: url("assets/icons/edit.png");
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}

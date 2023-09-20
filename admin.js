@@ -78,6 +78,23 @@ function setUpNavBar() {
   }
 }
 
+function createEditChroomElement(inelement) {
+  let isnew = inelement.className == "addchroom";
+  
+  let outelement = document.createElement("div");
+
+  let namein = document.createElement("input");
+  namein.type = "text";
+  namein.className = "nameedit";
+  namein.placeholder = "Chatroom name";
+
+  let descin = document.createElement("textarea");
+  descin.className = "descedit";
+  descin.placeholder = "Description";
+
+  return outelement;
+}
+
 function renderChrooms (chroomjson) {
   console.log(chroomjson);
   let chatrooms = JSON.parse(chroomjson);
@@ -98,8 +115,27 @@ function renderChrooms (chroomjson) {
     chroomtitle.className = "chattitle";
     chroomdesc.className = "chatdesc";
 
+    let chroomeditmenu = document.createElement("div");
+    chroomeditmenu.className = "chroomeditmenu";
+
+    let chroomeditbtn = document.createElement("div");
+    let chroomrmbtn = document.createElement("div");
+
+    // Chatroom edit & remove buttons
+    chroomeditbtn.className = "chroomeditbtn";
+    chroomrmbtn.className = "chroomrmbtn";
+
+    chroomeditbtn.addEventListener("click", () => 
+      chroomelement = createEditChroomElement(addchroomelement)
+    );
+
+    chroomeditmenu.appendChild(chroomeditbtn);
+    chroomeditmenu.appendChild(chroomrmbtn);
+
     chroomelement.appendChild(chroomtitle);
     chroomelement.appendChild(chroomdesc);
+
+    chroomelement.appendChild(chroomeditmenu);
 
     chroomgrid.appendChild(chroomelement);
   }
@@ -107,6 +143,7 @@ function renderChrooms (chroomjson) {
   addchroomelement.className = "addchroom";
   addchroomelement.addEventListener("click", () => {
     // Create a new element, i guess
+    addchroomelement = createEditChroomElement(addchroomelement);
   });
 
   chroomgrid.appendChild(addchroomelement);
