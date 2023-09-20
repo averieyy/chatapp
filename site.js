@@ -30,21 +30,27 @@ lightmode.addEventListener("mousedown", () => background.hidden = true);
 lightmode.addEventListener("mouseup", () => background.hidden = false);
 lightmode.addEventListener("mouseleave", () => background.hidden = false);
 
-chaddbtn.addEventListener("mousedown", () => {
-  title.innerText = "Enter name";
-  description.innerText = "Enter the name of the new chatroom";
-  mode = "CHADD";
-  newch["name"] = "";
-  newch["description"] = "";
-  msgin["placeholder"] = "Name";
-  chistorybox.innerHTML = "";
-});
-
 let chathistory = "";
 let currentchatroom = "";
 let chroomjson;
 let mode = "";
 let newch = { "name": "", "description": "" };
+
+chaddbtn.addEventListener("mousedown", () => {
+  if( mode == "CHADD"){
+    mode = "";
+    resetChitory();
+    chaddbtn.style.transform = "rotate(0deg)";
+  } else {
+    chaddbtn.style.transform = "rotate(45deg)";
+    title.innerText = "Enter name";
+    description.innerText = "Enter the name of the new chatroom";
+    mode = "CHADD";
+    newch["name"] = "";
+    msgin["placeholder"] = "Name";
+    chistorybox.innerHTML = "";
+  }
+});
 
 ws.addEventListener("message", (ev) => {
   let msg = ev.data;
