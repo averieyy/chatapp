@@ -23,9 +23,13 @@ let chatroomparticipants = {
   // 'chat': [ws1, ws2]
 };
 
+// Chathistory (stored by chatroom)
+let chathistories = {};
+
 // Fill <<chatroomparticipants>> with empty arrays
 for (let chatroom of chatrooms['chatrooms']) {
   chatroomparticipants[chatroom['name']] = [];
+  chathistories[chatroom['name']] = "";
 }
 
 // User logins
@@ -38,9 +42,6 @@ else {
   if (rawlogins == "") logins = {};
   else logins = JSON.parse(rawlogins);
 }
-
-// Chathistory (stored by chatroom)
-let chathistories = {};
 
 const server = createServer();
 const wss = new WebSocketServer({
@@ -124,6 +125,7 @@ wss.on("connection", (ws, req) => {
             chatroomparticipants[args[1]] = [ws];
             chathistories[args[1]] = "";
           }
+          console.log(chathistories[chatroom]);
           ws.send("CHIS " + chathistories[chatroom]);
           chathistories[chatroom] += "JOIN " + username + "\n";
 
@@ -176,7 +178,7 @@ wss.on("connection", (ws, req) => {
         if (!ischatroom(chatroom)) break;
 
         // Anti spam
-        if (!(privileges & (1<<1))) {
+        if (!(privileges & (1 << 1))) {
           let now = new Date().getTime();
           if (timeoutuntil > now) break;
           for (let message of lastmessagetimings) {
@@ -185,14 +187,14 @@ wss.on("connection", (ws, req) => {
           lastmessagetimings.push(now)
           if (lastmessagetimings.length >= 13) {
             // Punishment
-            ws.send("NOTE Spamming is disallowed, you will be timed out for " + 4*(2**felonies) + " seconds");
-            timeoutuntil = now + 4 * (2**felonies) * 1000;
+            ws.send("NOTE Spamming is disallowed, you will be timed out for " + 4 * (2 ** felonies) + " seconds");
+            timeoutuntil = now + 4 * (2 ** felonies) * 1000;
             felonies++;
             lastmessagetimings = [];
             break;
           }
         }
-        
+
 
         let msg = args.slice(1).join(" ");
 
@@ -213,6 +215,7 @@ wss.on("connection", (ws, req) => {
           chatrooms['chatrooms'].push({ "name": args[1], "description": args.splice(2).join(" ") });
           fs.writeFileSync("./chatrooms.json", JSON.stringify(chatrooms, "utf8"));
           chatroomparticipants[args[1]] = [];
+          chathistories[args[1]] = "";
           broadcastAll("CHADD " + args[1]);
         }
         break;
@@ -220,7 +223,7 @@ wss.on("connection", (ws, req) => {
         if (!loggedin) break;
         if (args.length == 1) break;
         if (args[1].length == 0) break;
-        if (!(privileges & (1<<2))) break;
+        if (!(privileges & (1 << 2))) break;
         if (!isuser(args[1])) break;
 
         bannedusers['banned'].push(args[1]);
@@ -232,7 +235,7 @@ wss.on("connection", (ws, req) => {
         if (!loggedin) break;
         if (args.length == 1) break;
         if (args[1].length == 0) break;
-        if (!(privileges & (1<<3))) break;
+        if (!(privileges & (1 << 3))) break;
         if (!isuser(args[1])) break;
 
         bannedusers['ipbanned'].push(args[1]);
