@@ -100,10 +100,12 @@ nav {
   margin: auto;
   margin-top: 15px;
   display: grid;
+  translate: 0% 12.5%;
   width: 50vw;
-  height: 50vh;
+  height: 75vh;
   gap: 15px;
   grid-template-columns: 1fr 1fr 1fr;
+  overflow-y: auto;
 }
 
 .chat {
@@ -159,4 +161,13 @@ nav {
 
 .chatdesc {
   margin: 0px;
+}
+
+.addchroom {
+  border: 5px #cdd6f4 dashed;
+  border-radius: 20px;
+  background-image: url("assets/icons/plus.png");
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  cursor: pointer;
 }

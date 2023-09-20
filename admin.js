@@ -81,7 +81,7 @@ function setUpNavBar() {
 function renderChrooms (chroomjson) {
   console.log(chroomjson);
   let chatrooms = JSON.parse(chroomjson);
-  chroomgrid.innerHTML = "";
+  chroomgrid.innerHTML = '';
   for (let chatroom of chatrooms['chatrooms']) {
     let chroomelement = document.createElement("div");
     chroomelement.className = "chat";
@@ -103,6 +103,13 @@ function renderChrooms (chroomjson) {
 
     chroomgrid.appendChild(chroomelement);
   }
+  let addchroomelement = document.createElement("div");
+  addchroomelement.className = "addchroom";
+  addchroomelement.addEventListener("click", () => {
+    // Create a new element, i guess
+  });
+
+  chroomgrid.appendChild(addchroomelement);
 }
 
 ws.addEventListener("message", (ev) => {
