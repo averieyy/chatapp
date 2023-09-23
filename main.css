@@ -32,17 +32,18 @@ h4 {
 }
 
 #centerarea {
+  display: flex;
+  gap: 10px;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translateX(-50%) translateY(-50%);
-  max-width: calc(90vw + 60px);
-  width: calc(250px + 250px + 400px + 60px);
+  max-width: 90vw;
+  width: 1000px;
 }
 
 #chatbox {
-  max-width: 40vw;
-  width: 400px;
+  flex: 1.75;
   padding: 10px;
   border-radius: 5px;
   float: left;
@@ -94,13 +95,13 @@ input {
 
 
 #chatroomselector {
-  margin-left: 10px;
+  flex: 1;
   padding: 5px;
-  max-width: 25vw;
-  width: 250px;
   float: right;
   border-radius: 10px;
   padding-top: 25px;
+  overflow-x: hidden;
+  margin-bottom: auto;
 }
 
 #chatroomselector h1 {
@@ -118,6 +119,7 @@ h1 {
 }
 
 .chatroom {
+  overflow-x: auto;
   padding-left: 10px;
   padding-right: 10px;
   width: fit-content;
@@ -127,10 +129,9 @@ h1 {
 }
 
 #users {
+  margin-bottom: auto;
+  flex: 1;
 	max-width: 25vw;
-	width: 250px;
-	float: left;
-  margin-right: 10px;
   padding: 5px;
 	border-radius: 10px;
   padding-top: 30px;
