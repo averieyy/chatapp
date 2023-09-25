@@ -54,7 +54,7 @@ h4 {
 }
 
 #msgsubmit {
-  all:unset;
+  all: unset;
   width: calc(25% - 30px);
   text-align: center;
   padding: 5px;
