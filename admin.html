@@ -12,9 +12,14 @@
 <body>
   <div id="overlay">
     <div id="loginpopup">
-      <input type="text" id="usernamein"><br>
-      <input type="password" id="passwdin"><br>
+      <input type="text" id="usernamein">
+      <input type="password" id="passwdin">
       <input type="button" id="submitlogin" value="Login">
+    </div>
+    <div id="editchroompopup" class="hidden">
+      <input placeholder="Chat room title" type="text" id="titlein">
+      <textarea placeholder="Chat room description" id="descin"></textarea>
+      <input type="button" id="editchroomsubmit" value="Edit">
     </div>
   </div>
   <main id="background">
@@ -39,13 +44,13 @@
       <p>The Users controls banning and unbanning users.<p>
       <p>The Chatrooms tab is for adding and removing chatrooms.<p>
     </div>
-    <div id="user" class="configarea" hidden>
+    <div id="user" class="configarea hidden">
       Lorem ipsum
     </div>
-    <div id="spam" class="configarea" hidden>
+    <div id="spam" class="configarea hidden">
       dolor sit
     </div>
-    <div id="chroom" class="configarea" hidden>
+    <div id="chroom" class="configarea hidden">
       <div id="chroomgrid">
         <div class="addchroom"></div>
       </div>

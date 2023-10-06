@@ -1,9 +1,14 @@
-let ws = new WebSocket(`ws://localhost:3000/admin`);
+let ws = new WebSocket(`ws://${location.host}/admin`);
 
-const loginoverlay = document.getElementById("overlay");
+const backoverlay = document.getElementById("overlay");
+const loginpopup = document.getElementById("loginpopup");
 const usernamein = document.getElementById("usernamein");
 const passwdin = document.getElementById("passwdin");
 const loginbtn = document.getElementById("submitlogin");
+const editchroompopup = document.getElementById("editchroompopup");
+const chroomtitlein = document.getElementById("titlein");
+const chroomdescin = document.getElementById("descin");
+const chroomeditsubmit = document.getElementById("editchroomsubmit");
 
 const chroomgrid = document.getElementById("chroomgrid");
 
@@ -23,6 +28,8 @@ let navelements = document.getElementsByClassName("navelement");
 let configareas = document.getElementsByClassName("configarea");
 let selectednavelement = document.getElementById("infonav");
 
+let currentchroom = "null ";
+
 function login() {
   username = usernamein.value;
   ws.send(`AUTH ${username} ${passwdin.value}`);
@@ -30,26 +37,57 @@ function login() {
   passwdin.value = "";
 }
 
-loginbtn.addEventListener("click", () => {
-  login();
-});
+function editchroom() {
+  if (currentchroom == "null ") ws.send(`CHADD ${chroomtitlein.value} ${chroomdescin.value}`);
+  else ws.send(`CHEDIT ${currentchroom} ${chroomtitlein.value} ${chroomdescin.value}`);
+  chroomtitlein.value = "";
+  chroomdescin.value = "";
+  editchroompopup.classList.add("hidden");
+  backoverlay.classList.add("hidden");
+}
+
+
 
 usernamein.addEventListener("keypress", (ev) => {
   if (ev.key == "Enter") passwdin.focus();
 });
-
 passwdin.addEventListener("keypress", (ev) => {
   if (ev.key == "Enter") login();
+});
+loginbtn.addEventListener("click", () => {
+  login();
+});
+
+chroomtitlein.addEventListener("keypress", (ev) => {
+  if (ev.key == "Enter") chroomdescin.focus();
+  // To not allow spaces
+  else if (!"qwertyuiopasdfghjklzxcvbnm-.0123456789".includes(ev.key)) ev.preventDefault();
+
+  if (ev.key == " ") chroomtitlein.value += "-";
+});
+chroomdescin.addEventListener("keypress", (ev) => {
+  if (ev.key == "Enter") editchroom();
+});
+chroomeditsubmit.addEventListener("click", () => {
+  editchroom();
+});
+editchroompopup.addEventListener("keydown", (ev) => {
+  if (ev.key == "Escape") {
+    chroomtitlein.value = "";
+    chroomdescin.value = "";
+    editchroompopup.classList.add("hidden");
+    backoverlay.classList.add("hidden");
+  }
 });
 
 function switchTab(navelement) {
   let generalid = navelement.id.split("nav")[0];
   for (let configarea of configareas) {
     if (configarea.id == generalid) {
-      configarea.hidden = false;
+      configarea.classList.remove("hidden");
     }
     if (configarea.id == selectednavelement.id.split("nav")[0]) {
-      configarea.hidden = true;
+      configarea.classList.add("hidden");
     }
   }
   if (generalid == "chroom") ws.send("LISTCHROOMS");
@@ -78,21 +116,12 @@ function setUpNavBar() {
   }
 }
 
-function createEditChroomElement(inelement) {
-  let isnew = inelement.className == "addchroom";
-  
-  let outelement = document.createElement("div");
+function revealChroomEditPopup(editElement = "null ") {
+  currentchroom = editElement;
 
-  let namein = document.createElement("input");
-  namein.type = "text";
-  namein.className = "nameedit";
-  namein.placeholder = "Chatroom name";
-
-  let descin = document.createElement("textarea");
-  descin.className = "descedit";
-  descin.placeholder = "Description";
-
-  return outelement;
+  backoverlay.classList.remove("hidden");
+  editchroompopup.classList.remove("hidden");
+  chroomtitlein.focus();
 }
 
 function renderChrooms (chroomjson) {
@@ -126,7 +155,11 @@ function renderChrooms (chroomjson) {
     chroomrmbtn.className = "chroomrmbtn";
 
     chroomeditbtn.addEventListener("click", () => 
-      chroomelement = createEditChroomElement(addchroomelement)
+      revealChroomEditPopup(chatroom['name'])
+    );
+
+    chroomrmbtn.addEventListener("click", () => 
+      ws.send(`CHRM ${chatroom['name']}`)
     );
 
     chroomeditmenu.appendChild(chroomeditbtn);
@@ -143,7 +176,7 @@ function renderChrooms (chroomjson) {
   addchroomelement.className = "addchroom";
   addchroomelement.addEventListener("click", () => {
     // Create a new element, i guess
-    addchroomelement = createEditChroomElement(addchroomelement);
+    revealChroomEditPopup();
   });
 
   chroomgrid.appendChild(addchroomelement);
@@ -161,7 +194,9 @@ ws.addEventListener("message", (ev) => {
       if (args[1] == "SUCC" ) {
         privileges = args[2] - 0;
         loggedin = true;
-        loginoverlay.hidden = true;
+        backoverlay.classList.add("hidden");
+        loginpopup.classList.add("hidden");
+
         setUpNavBar();
       }
       break;
@@ -169,6 +204,10 @@ ws.addEventListener("message", (ev) => {
       renderChrooms(args.splice(1).join(" "));
       break;
     case "CHADD":
+      ws.send("LISTCHROOMS");
+      break;
+    case "CHEDIT":
+    case "CHRM":
       ws.send("LISTCHROOMS");
       break;
   }

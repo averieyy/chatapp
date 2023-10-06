@@ -41,8 +41,13 @@ nav {
 }
 
 #overlay {
-  width: 100vw;
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
   position: absolute;
   backdrop-filter: blur(5px);
   left: 0px;
@@ -50,13 +55,11 @@ nav {
 }
 
 #loginpopup {
-  position: relative;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
   width: fit-content;
   height: fit-content;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
 
   background-color: #1e1e2e;
   border-radius: 10px;
@@ -89,6 +92,50 @@ nav {
   user-select: none;
   margin: 3px;
   border-radius: 5px;
+  width: fit-content;
+}
+
+#editchroompopup {
+  width: fit-content;
+  height: fit-content;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+
+  background-color: #1e1e2e;
+  border-radius: 10px;
+
+  & #titlein {
+    all: unset;
+    background-color: #181825;
+    border: none;
+    outline: none;
+    padding: 10px;
+    margin: 3px;
+    border-radius: 5px;
+  }
+  & #descin {
+    all: unset;
+    background-color: #181825;
+    border: none;
+    outline: none;
+    padding: 10px;
+    margin: 3px;
+    border-radius: 5px;
+    resize: none;
+  }
+  & #editchroomsubmit {
+    all: unset;
+    background-color: #181825;
+    border: none;
+    outline: none;
+    padding: 10px;
+    cursor: pointer;
+    user-select: none;
+    margin: 3px;
+    border-radius: 5px;
+    width: fit-content;
+  }
 }
 
 #info {
@@ -96,11 +143,15 @@ nav {
   margin: auto;
 }
 
+#chroom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 #chroomgrid {
-  margin: auto;
-  margin-top: 15px;
   display: grid;
-  translate: 0% 12.5%;
   width: 50vw;
   height: 75vh;
   gap: 15px;
@@ -164,8 +215,10 @@ nav {
 }
 
 .addchroom {
-  border: 5px #cdd6f4 dashed;
-  border-radius: 20px;
+  border: 2px #cdd6f4 solid;
+  border-radius: 5px;
+  height: 30vh;
+  padding: 8px;
   background-image: url("assets/icons/plus.png");
   background-position: 50% 50%;
   background-repeat: no-repeat;
@@ -173,15 +226,31 @@ nav {
 }
 
 .chroomeditmenu {
-  background-color: #11111b;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
 }
 
 .chroomeditbtn {
-  width: 20px;
-  height: 20px;
+  width: 35px;
+  height: 35px;
   background-image: url("assets/icons/edit.png");
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: contain;
   cursor: pointer;
+}
+
+.chroomrmbtn {
+  width: 35px;
+  height: 35px;
+  background-image: url("assets/icons/delete.png");
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none !important;
 }

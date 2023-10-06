@@ -54,6 +54,9 @@ ws.addEventListener("message", (ev) => {
       chathistory = args.splice(1).join(" ").trim();
       renderchathistory();
       break;
+    case "CHEDIT":
+    case "CHRM":
+      getchatrooms();
     default:
       chathistory += "\n" + msg;
       renderline(msg)

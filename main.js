@@ -320,16 +320,17 @@ adminwss.on("connection", (ws, req) => {
       case "CHRM":
         if (!loggedin) break;
         if (args[1].length == 0) break;
-        if (ischatroom(args[1])) {
+        if (!ischatroom(args[1])) {
           ws.send("CHRM DOESN'T EXIST");
           break;
         }
         if (privileges & 1) {
-          let chrmindex = chatrooms['chatrooms'].find((chroomname) => {
-            return chroomname == args[1];
+          let currentchroom = chatrooms['chatrooms'].find((chroom) => {
+            return chroom['name'] == args[1];
           });
+          let chrmindex = chatrooms['chatrooms'].indexOf(currentchroom);
           if (chrmindex == -1) {
-            ws.send("NOTE chroom doesn't exist")
+            ws.send("CHRM DOESNT EXIST");
             break;
           } else {
             chatrooms['chatrooms'].splice(chrmindex, 1);
@@ -338,6 +339,31 @@ adminwss.on("connection", (ws, req) => {
           chatroomparticipants[args[1]] = [];
           broadcastAll("CHRM " + args[1]);
         }
+        break;
+      case "CHEDIT":
+        if (!loggedin) break;
+        if (args.length < 4) break;
+        if (!ischatroom(args[1])) {
+          ws.send("CHRM DOESNT EXIST");
+          break;
+        }
+        if (privileges & 1) {
+          let currentchroom = chatrooms['chatrooms'].find((chroom) => {
+            return chroom['name'] == args[1];
+          });
+          let chrmindex = chatrooms['chatrooms'].indexOf(currentchroom);
+          if (chrmindex == -1) {
+            ws.send("CHRM DOESNT EXIST");
+            break;
+          } else {
+            chatrooms['chatrooms'][chrmindex]['name'] = args[2];
+            chatrooms['chatrooms'][chrmindex]['description'] = args.splice(3).join(" ");
+            fs.writeFileSync("./chatrooms.json", JSON.stringify(chatrooms, "utf8"));
+            chatroomparticipants[args[2]] = chatroomparticipants[args[1]];
+            broadcastAll("CHEDIT");
+          }
+        }
+        break;
       case "BAN":
         if (!loggedin) break;
         if (args.length == 1) break;
