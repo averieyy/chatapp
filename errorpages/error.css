@@ -1,0 +1,63 @@
+:root {
+    font-size: 15px;
+    font-family: 'JetBrains Mono', monospace;
+    color: #cdd6f4;
+}
+
+*::selection {
+    color: #1e1e2e;
+    background-color: #cdd6f4;
+}
+
+html {
+    background-color: #1e1e2e;
+}
+
+body {
+    margin: 0px;
+    min-height: 100vh;
+    height: 100vh;
+}
+
+.outercenter {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.errorcontent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: fit-content;
+}
+.errorcode {
+    font-size: 25vw;
+    display: block;
+    font-weight: bold;
+    font-style: italic;
+}
+.errordesc {
+    font-style: italic;
+    font-size: 5vw;
+    text-align: center;
+}
+.separator {
+    width: auto;
+    border: 2px solid #cdd6f4;
+    border-radius: 2px;
+    background-color: #cdd6f4;
+}
+
+.goback {
+    color: #cdd6f4;
+    text-decoration: none;
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    padding: 1rem;
+
+    &:hover {
+        background-color: #313244;
+    }
+}
