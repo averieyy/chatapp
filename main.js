@@ -131,10 +131,9 @@ wss.on("connection", (ws, req) => {
 
           else continue;
           if (chatroomparticipants[args[1]]) chatroomparticipants[args[1]].push(ws);
-          else {
-            chatroomparticipants[args[1]] = [ws];
-            chathistories[args[1]] = "";
-          }
+          else chatroomparticipants[args[1]] = [ws];
+
+          if (!chathistories[chatroom]) chathistories[chatroom] = "DETAIL ---\n";
           ws.send("CHIS " + chathistories[chatroom]);
           chathistories[chatroom] += "JOIN " + username + "\n";
 

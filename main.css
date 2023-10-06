@@ -90,6 +90,7 @@ input {
 .wswarning {
   font-style: italic;
   font-weight: bold;
+  margin: 0px;
 }
 
 
@@ -146,13 +147,14 @@ h1 {
 }
 
 .user {
+  display: flex;
   padding-left: 10px;
   padding-right: 10px;
   width: fit-content;
   cursor: pointer;
   margin-top: 5px;
   user-select: none;
-  justify-content: center;
+  align-items: center;
 }
 
 #lightmode {

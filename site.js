@@ -144,6 +144,10 @@ function renderline(line) {
       }
       currenthtmlelement.innerText = "[ " + lineargs[1] + " ]: " + message;
       break;
+    case "DETAIL":
+      currenthtmlelement.className = "wsdetail";
+      currenthtmlelement.innerText = lineargs.slice(1).join(" ");
+      break;
     case "JOIN":
       currenthtmlelement.className = "wsdetail";
       currenthtmlelement.innerText = lineargs[1] + " joined!";
