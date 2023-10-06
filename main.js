@@ -8,6 +8,9 @@ const { createHash, randomBytes } = require("crypto");
 
 /* Variables with inits */
 
+const disallowedfiles = ["logins.json", "bannedusers.json", "package.json", "package-lock.json", ".gitignore"];
+const disallowedfolders = ["node_modules", "docs"];
+
 // Banned users
 let bannedusers = {
   "banned": [],
@@ -88,6 +91,14 @@ function hashPassword(passwd) {
   };
 }
 
+function sendErrorPage (statuscode, res) {
+  res.writeHead(statuscode, { "Content-Type": "text/html" });
+  res.write(`<script>document.location='/errorpages/${statuscode}.html'</script>`);
+  res.end();
+
+  return;
+}
+
 /* HTTP & WS Server */
 
 wss.on("connection", (ws, req) => {
@@ -121,11 +132,10 @@ wss.on("connection", (ws, req) => {
 
           else continue;
           if (chatroomparticipants[args[1]]) chatroomparticipants[args[1]].push(ws);
-          else {
-            chatroomparticipants[args[1]] = [ws];
-            chathistories[args[1]] = "";
-          }
-          console.log(chathistories[chatroom]);
+          else chatroomparticipants[args[1]] = [ws];
+
+          if (!chathistories[chatroom]) chathistories[chatroom] = "DETAIL ---\n";
+          
           ws.send("CHIS " + chathistories[chatroom]);
           chathistories[chatroom] += "JOIN " + username + "\n";
 
@@ -293,13 +303,35 @@ server.on("request", (req, res) => {
         });
         break;
       default:
+        for (let file of disallowedfiles) {
+          if (pathname.endsWith(file)) {
+            // Hidden file
+            sendErrorPage(401, res);
+            return;
+          }
+        }
+        for (let folder of disallowedfolders) {
+          if (pathname.includes(`${folder}`)) {
+            // Hidden file
+            sendErrorPage(401, res);
+            return;
+          }
+        }
         if (fs.existsSync("." + pathname)) {
+
+          if (!fs.lstatSync("."+pathname).isFile()) {
+            sendErrorPage(404, res);
+            return;
+          }
 
           let file = fs.readFileSync("." + pathname);
 
           res.writeHead(200);
           res.write(file, "binary");
           res.end();
+        }
+        else {
+          sendErrorPage(404, res)
         }
         break;
     }
